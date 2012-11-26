@@ -167,7 +167,7 @@ to <code>destination</code>.</p>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="DefaultChannelProps.html"><span class="name">DefaultChannelProps</span></a><span class="params">(<span name="id">id: <span class="extype" name="scala.Int">Int</span></span>, <span name="destination">destination: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>)</span><span class="result"> extends <a href="ChannelProps.html" class="extype" name="org.eligosource.eventsourced.core.ChannelProps">ChannelProps</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="DefaultChannelProps.html"><span class="name">DefaultChannelProps</span></a><span class="params">(<span name="id">id: <span class="extype" name="scala.Int">Int</span></span>, <span name="destination">destination: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>, <span name="dispatcherName">dispatcherName: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>)</span><span class="result"> extends <a href="ChannelProps.html" class="extype" name="org.eligosource.eventsourced.core.ChannelProps">ChannelProps</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt"><a href="DefaultChannel.html" class="extype" name="org.eligosource.eventsourced.core.DefaultChannel">org.eligosource.eventsourced.core.DefaultChannel</a> configuration object.</p>
@@ -239,6 +239,19 @@ based on message sequence number.</p>
       </span>
       </h4>
       <p class="comment cmt">An abstract journal to be implemented by journal providers.</p>
+    </li><li name="org.eligosource.eventsourced.core.JournalProtocol" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="JournalProtocolextendsObject"></a>
+      <a id="JournalProtocol:JournalProtocol"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="JournalProtocol.html"><span class="name">JournalProtocol</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
     </li><li name="org.eligosource.eventsourced.core.Message" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="MessageextendsProductwithSerializable"></a>
       <a id="Message:Message"></a>
@@ -280,6 +293,21 @@ to a <a href="Channel.html" class="extype" name="org.eligosource.eventsourced.co
       </h4>
       <p class="comment cmt">Factory for creating <a href="MessageEmitter.html" class="extype" name="org.eligosource.eventsourced.core.MessageEmitter">org.eligosource.eventsourced.core.MessageEmitter</a>s
 for a certain <a href="Channel.html" class="extype" name="org.eligosource.eventsourced.core.Channel">org.eligosource.eventsourced.core.Channel</a>.</p>
+    </li><li name="org.eligosource.eventsourced.core.MessageSerializer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MessageSerializerextendsSerializer"></a>
+      <a id="MessageSerializer:MessageSerializer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="MessageSerializer.html"><span class="name">MessageSerializer</span></a><span class="result"> extends <span class="extype" name="akka.serialization.Serializer">Serializer</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Protobuf-based <a href="Message.html" class="extype" name="org.eligosource.eventsourced.core.Message">org.eligosource.eventsourced.core.Message</a> serializer that uses
+the Akka <span class="extype" name="akka.serialization.Serialization">akka.serialization.Serialization</span> extension to find a serializer for
+an event contained in an event message.</p>
     </li><li name="org.eligosource.eventsourced.core.Multicast" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="MulticastextendsActor"></a>
       <a id="Multicast:Multicast"></a>
@@ -304,7 +332,7 @@ received event <a href="Message.html" class="extype" name="org.eligosource.event
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="ProcessorProps.html"><span class="name">ProcessorProps</span></a><span class="params">(<span name="id">id: <span class="extype" name="scala.Int">Int</span></span>, <span name="processorFactory">processorFactory: (<span class="extype" name="scala.Int">Int</span>) ⇒ <span class="extype" name="akka.actor.Actor">Actor</span> with <a href="Eventsourced.html" class="extype" name="org.eligosource.eventsourced.core.Eventsourced">Eventsourced</a></span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="ProcessorProps.html"><span class="name">ProcessorProps</span></a><span class="params">(<span name="id">id: <span class="extype" name="scala.Int">Int</span></span>, <span name="processorFactory">processorFactory: (<span class="extype" name="scala.Int">Int</span>) ⇒ <span class="extype" name="akka.actor.Actor">Actor</span> with <a href="Eventsourced.html" class="extype" name="org.eligosource.eventsourced.core.Eventsourced">Eventsourced</a></span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>, <span name="dispatcherName">dispatcherName: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt"><a href="Eventsourced.html" class="extype" name="org.eligosource.eventsourced.core.Eventsourced">org.eligosource.eventsourced.core.Eventsourced</a> processor configuration object.</p>
@@ -359,7 +387,7 @@ actor's <code>receive</code> method with that <code>event</code>.</p>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="ReliableChannelProps.html"><span class="name">ReliableChannelProps</span></a><span class="params">(<span name="id">id: <span class="extype" name="scala.Int">Int</span></span>, <span name="destination">destination: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>, <span name="policy">policy: <a href="RedeliveryPolicy.html" class="extype" name="org.eligosource.eventsourced.core.RedeliveryPolicy">RedeliveryPolicy</a> = <span class="symbol">RedeliveryPolicy.apply()</span></span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>)</span><span class="result"> extends <a href="ChannelProps.html" class="extype" name="org.eligosource.eventsourced.core.ChannelProps">ChannelProps</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="ReliableChannelProps.html"><span class="name">ReliableChannelProps</span></a><span class="params">(<span name="id">id: <span class="extype" name="scala.Int">Int</span></span>, <span name="destination">destination: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>, <span name="policy">policy: <a href="RedeliveryPolicy.html" class="extype" name="org.eligosource.eventsourced.core.RedeliveryPolicy">RedeliveryPolicy</a> = <span class="symbol">RedeliveryPolicy.apply()</span></span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>, <span name="dispatcherName">dispatcherName: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>)</span><span class="result"> extends <a href="ChannelProps.html" class="extype" name="org.eligosource.eventsourced.core.ChannelProps">ChannelProps</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt"><a href="ReliableChannel.html" class="extype" name="org.eligosource.eventsourced.core.ReliableChannel">org.eligosource.eventsourced.core.ReliableChannel</a> configuration object.</p>
@@ -376,6 +404,20 @@ actor's <code>receive</code> method with that <code>event</code>.</p>
       </span>
       </h4>
       <p class="comment cmt">Stackable modification for actors that need to receive a re-sequenced message stream.</p>
+    </li><li name="org.eligosource.eventsourced.core.Serialization" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SerializationextendsExtension"></a>
+      <a id="Serialization:Serialization"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Serialization.html"><span class="name">Serialization</span></a><span class="result"> extends <span class="extype" name="akka.actor.Extension">Extension</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Extension for protobuf-based (de)serialization of event messages and journal
+commands.</p>
     </li></ol>
             </div>
 
@@ -422,6 +464,19 @@ actor's <code>receive</code> method with that <code>event</code>.</p>
       </span>
       </h4>
       
+    </li><li name="org.eligosource.eventsourced.core.Serialization" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Serialization"></a>
+      <a id="Serialization:Serialization"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Serialization$.html"><span class="name">Serialization</span></a><span class="result"> extends <span class="extype" name="akka.actor.ExtensionId">ExtensionId</span>[<a href="Serialization.html" class="extype" name="org.eligosource.eventsourced.core.Serialization">Serialization</a>] with <span class="extype" name="akka.actor.ExtensionIdProvider">ExtensionIdProvider</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Serialization extension access point.</p>
     </li><li name="org.eligosource.eventsourced.core.package#decorator" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="decorator(processorId:Int,target:akka.actor.ActorRef,transformer:org.eligosource.eventsourced.core.Message=&gt;Any):akka.actor.Actorwithorg.eligosource.eventsourced.core.Eventsourced"></a>
       <a id="decorator(Int,ActorRef,(Message)⇒Any):ActorwithEventsourced"></a>

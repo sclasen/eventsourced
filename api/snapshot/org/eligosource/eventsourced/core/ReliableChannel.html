@@ -97,7 +97,7 @@ or <code>EventsourcingExtension.deliver()</code>).
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="org.eligosource.eventsourced.core.ReliableChannel#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="&lt;init&gt;(id:Int,journal:akka.actor.ActorRef,destination:akka.actor.ActorRef,policy:org.eligosource.eventsourced.core.RedeliveryPolicy):org.eligosource.eventsourced.core.ReliableChannel"></a>
+      <a id="&lt;init&gt;(id:Int,journal:akka.actor.ActorRef,destination:akka.actor.ActorRef,policy:org.eligosource.eventsourced.core.RedeliveryPolicy,dispatcherName:Option[String]):org.eligosource.eventsourced.core.ReliableChannel"></a>
       <a id="&lt;init&gt;:ReliableChannel"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -105,11 +105,11 @@ or <code>EventsourcingExtension.deliver()</code>).
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">ReliableChannel</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Int">Int</span></span>, <span name="journal">journal: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>, <span name="destination">destination: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>, <span name="policy">policy: <a href="RedeliveryPolicy.html" class="extype" name="org.eligosource.eventsourced.core.RedeliveryPolicy">RedeliveryPolicy</a></span>)</span>
+        <span class="name">ReliableChannel</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Int">Int</span></span>, <span name="journal">journal: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>, <span name="destination">destination: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>, <span name="policy">policy: <a href="RedeliveryPolicy.html" class="extype" name="org.eligosource.eventsourced.core.RedeliveryPolicy">RedeliveryPolicy</a></span>, <span name="dispatcherName">dispatcherName: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>)</span>
       </span>
       </h4>
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">id</dt><dd class="cmt"><p>channel id. Must be a positive integer.</p></dd><dt class="param">journal</dt><dd class="cmt"><p>journal of the <a href="EventsourcingExtension.html" class="extype" name="org.eligosource.eventsourced.core.EventsourcingExtension">org.eligosource.eventsourced.core.EventsourcingExtension</a>
-       at which this channel is registered.</p></dd><dt class="param">destination</dt><dd class="cmt"><p>delivery destination of event messages added to this channel.
+       at which this channel is registered.</p></dd><dt class="param">destination</dt><dd class="cmt"><p>delivery destination of event messages added to this channel.</p></dd><dt class="param">policy</dt><dd class="cmt"><p>redelivery policy.</p></dd><dt class="param">dispatcherName</dt><dd class="cmt"><p>optional dispatcher name.
 </p></dd></dl></div>
     </li></ol>
             </div>
@@ -255,8 +255,7 @@ or <code>EventsourcingExtension.deliver()</code>).
         <span class="name">destination</span><span class="result">: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">delivery destination of event messages added to this channel.</p><div class="fullcomment"><div class="comment cmt"><p>delivery destination of event messages added to this channel.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="org.eligosource.eventsourced.core.ReliableChannel">ReliableChannel</a> → <a href="Channel.html" class="extype" name="org.eligosource.eventsourced.core.Channel">Channel</a></dd></dl></div>
+      <p class="shortcomment cmt">delivery destination of event messages added to this channel.</p><div class="fullcomment"><div class="comment cmt"><p>delivery destination of event messages added to this channel.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="org.eligosource.eventsourced.core.ReliableChannel">ReliableChannel</a> → <a href="Channel.html" class="extype" name="org.eligosource.eventsourced.core.Channel">Channel</a></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>

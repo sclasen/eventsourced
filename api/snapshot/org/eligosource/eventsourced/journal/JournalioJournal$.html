@@ -156,22 +156,22 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="org.eligosource.eventsourced.journal.JournalioJournal#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="apply(dir:java.io.File,name:Option[String])(implicitsystem:akka.actor.ActorSystem):akka.actor.ActorRef"></a>
-      <a id="apply(File,Option[String])(ActorSystem):ActorRef"></a>
+      <a id="apply(dir:java.io.File,name:Option[String],dispatcherName:Option[String])(implicitsystem:akka.actor.ActorSystem):akka.actor.ActorRef"></a>
+      <a id="apply(File,Option[String],Option[String])(ActorSystem):ActorRef"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">apply</span><span class="params">(<span name="dir">dir: <span class="extype" name="java.io.File">File</span></span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="system">system: <span class="extype" name="akka.actor.ActorSystem">ActorSystem</span></span>)</span><span class="result">: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>
+        <span class="name">apply</span><span class="params">(<span name="dir">dir: <span class="extype" name="java.io.File">File</span></span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="dispatcherName">dispatcherName: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="system">system: <span class="extype" name="akka.actor.ActorSystem">ActorSystem</span></span>)</span><span class="result">: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>
       </span>
       </h4>
       <p class="shortcomment cmt">Creates a <a href="https://github.com/sbtourist/Journal.IO" target="_blank">Journal.IO</a> based journal.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a <a href="https://github.com/sbtourist/Journal.IO" target="_blank">Journal.IO</a> based journal.</p><p>Pros:</p><ul><li>efficient replay of input messages for all processors (batch replay
    with optional lower bound).</li><li>efficient replay of output messages
    (after initial replay of input messages)</li><li>efficient deletion of old entries</li></ul><p>Cons:</p><ul><li>replay of input messages for a single processor requires full scan
    (with optional lower bound)
-</li></ul></div><dl class="paramcmts block"><dt class="param">dir</dt><dd class="cmt"><p>journal directory</p></dd><dt class="param">name</dt><dd class="cmt"><p>optional name of the journal actor in the underlying actor system.</p></dd></dl><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt">InvalidActorNameException<p>if <code>name</code> is defined and already in use
+</li></ul></div><dl class="paramcmts block"><dt class="param">dir</dt><dd class="cmt"><p>journal directory</p></dd><dt class="param">name</dt><dd class="cmt"><p>optional name of the journal actor in the underlying actor system.</p></dd><dt class="param">dispatcherName</dt><dd class="cmt"><p>optional dispatcher name.</p></dd></dl><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt">InvalidActorNameException<p>if <code>name</code> is defined and already in use
         in the underlying actor system.
 </p></span></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">

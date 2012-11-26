@@ -40,12 +40,12 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">ProcessorProps</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Int">Int</span></span>, <span name="processorFactory">processorFactory: (<span class="extype" name="scala.Int">Int</span>) ⇒ <span class="extype" name="akka.actor.Actor">Actor</span> with <a href="Eventsourced.html" class="extype" name="org.eligosource.eventsourced.core.Eventsourced">Eventsourced</a></span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">ProcessorProps</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Int">Int</span></span>, <span name="processorFactory">processorFactory: (<span class="extype" name="scala.Int">Int</span>) ⇒ <span class="extype" name="akka.actor.Actor">Actor</span> with <a href="Eventsourced.html" class="extype" name="org.eligosource.eventsourced.core.Eventsourced">Eventsourced</a></span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>, <span name="dispatcherName">dispatcherName: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p><a href="Eventsourced.html" class="extype" name="org.eligosource.eventsourced.core.Eventsourced">org.eligosource.eventsourced.core.Eventsourced</a> processor configuration object.
-</p></div><dl class="paramcmts block"><dt class="param">id</dt><dd class="cmt"><p>Processor id.</p></dd><dt class="param">processorFactory</dt><dd class="cmt"><p>Processor factory.</p></dd><dt class="param">name</dt><dd class="cmt"><p>Optional processor name.
+</p></div><dl class="paramcmts block"><dt class="param">id</dt><dd class="cmt"><p>Processor id.</p></dd><dt class="param">processorFactory</dt><dd class="cmt"><p>Processor factory.</p></dd><dt class="param">name</dt><dd class="cmt"><p>Optional processor name.</p></dd><dt class="param">dispatcherName</dt><dd class="cmt"><p>Optional dispatcher name.
 </p></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.Product">Product</span>, <span class="extype" name="scala.Equals">Equals</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
@@ -87,7 +87,7 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="org.eligosource.eventsourced.core.ProcessorProps#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="&lt;init&gt;(id:Int,processorFactory:Int=&gt;akka.actor.Actorwithorg.eligosource.eventsourced.core.Eventsourced,name:Option[String]):org.eligosource.eventsourced.core.ProcessorProps"></a>
+      <a id="&lt;init&gt;(id:Int,processorFactory:Int=&gt;akka.actor.Actorwithorg.eligosource.eventsourced.core.Eventsourced,name:Option[String],dispatcherName:Option[String]):org.eligosource.eventsourced.core.ProcessorProps"></a>
       <a id="&lt;init&gt;:ProcessorProps"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -95,10 +95,10 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">ProcessorProps</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Int">Int</span></span>, <span name="processorFactory">processorFactory: (<span class="extype" name="scala.Int">Int</span>) ⇒ <span class="extype" name="akka.actor.Actor">Actor</span> with <a href="Eventsourced.html" class="extype" name="org.eligosource.eventsourced.core.Eventsourced">Eventsourced</a></span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>)</span>
+        <span class="name">ProcessorProps</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Int">Int</span></span>, <span name="processorFactory">processorFactory: (<span class="extype" name="scala.Int">Int</span>) ⇒ <span class="extype" name="akka.actor.Actor">Actor</span> with <a href="Eventsourced.html" class="extype" name="org.eligosource.eventsourced.core.Eventsourced">Eventsourced</a></span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>, <span name="dispatcherName">dispatcherName: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>)</span>
       </span>
       </h4>
-      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">id</dt><dd class="cmt"><p>Processor id.</p></dd><dt class="param">processorFactory</dt><dd class="cmt"><p>Processor factory.</p></dd><dt class="param">name</dt><dd class="cmt"><p>Optional processor name.
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">id</dt><dd class="cmt"><p>Processor id.</p></dd><dt class="param">processorFactory</dt><dd class="cmt"><p>Processor factory.</p></dd><dt class="param">name</dt><dd class="cmt"><p>Optional processor name.</p></dd><dt class="param">dispatcherName</dt><dd class="cmt"><p>Optional dispatcher name.
 </p></dd></dl></div>
     </li></ol>
             </div>
@@ -220,6 +220,19 @@
        ref factory.</p></dd><dt>returns</dt><dd class="cmt"><p>a processor ref.</p></dd></dl><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt">InvalidActorNameException<p>if <code>name</code> is defined and already in use
         in the underlying actor system.
 </p></span></dd></dl></div>
+    </li><li name="org.eligosource.eventsourced.core.ProcessorProps#dispatcherName" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="dispatcherName:Option[String]"></a>
+      <a id="dispatcherName:Option[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">dispatcherName</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Optional dispatcher name.</p>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>

@@ -40,7 +40,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">DefaultChannelProps</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Int">Int</span></span>, <span name="destination">destination: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>)</span><span class="result"> extends <a href="ChannelProps.html" class="extype" name="org.eligosource.eventsourced.core.ChannelProps">ChannelProps</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">DefaultChannelProps</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Int">Int</span></span>, <span name="destination">destination: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>, <span name="dispatcherName">dispatcherName: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>)</span><span class="result"> extends <a href="ChannelProps.html" class="extype" name="org.eligosource.eventsourced.core.ChannelProps">ChannelProps</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
@@ -86,7 +86,7 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="org.eligosource.eventsourced.core.DefaultChannelProps#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(id:Int,destination:akka.actor.ActorRef,name:Option[String]):org.eligosource.eventsourced.core.DefaultChannelProps"></a>
+      <a id="&lt;init&gt;(id:Int,destination:akka.actor.ActorRef,name:Option[String],dispatcherName:Option[String]):org.eligosource.eventsourced.core.DefaultChannelProps"></a>
       <a id="&lt;init&gt;:DefaultChannelProps"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -94,7 +94,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">DefaultChannelProps</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Int">Int</span></span>, <span name="destination">destination: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>)</span>
+        <span class="name">DefaultChannelProps</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Int">Int</span></span>, <span name="destination">destination: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>, <span name="dispatcherName">dispatcherName: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>)</span>
       </span>
       </h4>
       
@@ -232,6 +232,19 @@ settings defined by this configuration object.</p></div><dl class="paramcmts blo
       </span>
       </h4>
       <p class="shortcomment cmt">Channel destination.</p><div class="fullcomment"><div class="comment cmt"><p>Channel destination.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="org.eligosource.eventsourced.core.DefaultChannelProps">DefaultChannelProps</a> → <a href="ChannelProps.html" class="extype" name="org.eligosource.eventsourced.core.ChannelProps">ChannelProps</a></dd></dl></div>
+    </li><li name="org.eligosource.eventsourced.core.DefaultChannelProps#dispatcherName" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="dispatcherName:Option[String]"></a>
+      <a id="dispatcherName:Option[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">dispatcherName</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Optional dispatcher name.</p><div class="fullcomment"><div class="comment cmt"><p>Optional dispatcher name.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="org.eligosource.eventsourced.core.DefaultChannelProps">DefaultChannelProps</a> → <a href="ChannelProps.html" class="extype" name="org.eligosource.eventsourced.core.ChannelProps">ChannelProps</a></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -413,6 +426,19 @@ settings defined by this configuration object.</p></div><dl class="paramcmts blo
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
+    </li><li name="org.eligosource.eventsourced.core.DefaultChannelProps#withDispatcherName" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="withDispatcherName(dispatcherName:String):org.eligosource.eventsourced.core.DefaultChannelProps"></a>
+      <a id="withDispatcherName(String):DefaultChannelProps"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">withDispatcherName</span><span class="params">(<span name="dispatcherName">dispatcherName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="" class="extype" name="org.eligosource.eventsourced.core.DefaultChannelProps">DefaultChannelProps</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns a new <code>DefaultChannelProps</code> with the specified dispatcher name.</p>
     </li><li name="org.eligosource.eventsourced.core.DefaultChannelProps#withName" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="withName(name:String):org.eligosource.eventsourced.core.DefaultChannelProps"></a>
       <a id="withName(String):DefaultChannelProps"></a>
