@@ -360,7 +360,7 @@ actor's <code>receive</code> method with that <code>event</code>.</p>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="RedeliveryPolicy.html"><span class="name">RedeliveryPolicy</span></a><span class="params">(<span name="confirmationTimeout">confirmationTimeout: <span class="extype" name="scala.concurrent.duration.FiniteDuration">FiniteDuration</span></span>, <span name="restartDelay">restartDelay: <span class="extype" name="scala.concurrent.duration.FiniteDuration">FiniteDuration</span></span>, <span name="redeliveryDelay">redeliveryDelay: <span class="extype" name="scala.concurrent.duration.FiniteDuration">FiniteDuration</span></span>, <span name="redeliveryMax">redeliveryMax: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="RedeliveryPolicy.html"><span class="name">RedeliveryPolicy</span></a><span class="params">(<span name="confirmationTimeout">confirmationTimeout: <span class="extype" name="scala.concurrent.duration.FiniteDuration">FiniteDuration</span></span>, <span name="restartDelay">restartDelay: <span class="extype" name="scala.concurrent.duration.FiniteDuration">FiniteDuration</span></span>, <span name="restartMax">restartMax: <span class="extype" name="scala.Int">Int</span></span>, <span name="redeliveryDelay">redeliveryDelay: <span class="extype" name="scala.concurrent.duration.FiniteDuration">FiniteDuration</span></span>, <span name="redeliveryMax">redeliveryMax: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt">Redelivery policy for a <a href="ReliableChannel.html" class="extype" name="org.eligosource.eventsourced.core.ReliableChannel">org.eligosource.eventsourced.core.ReliableChannel</a>.</p>
@@ -425,7 +425,20 @@ commands.</p>
 
         <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li name="org.eligosource.eventsourced.core.EventsourcingExtension" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="org.eligosource.eventsourced.core.Channel" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Channel"></a>
+      <a id="Channel:Channel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Channel$.html"><span class="name">Channel</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="org.eligosource.eventsourced.core.EventsourcingExtension" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="EventsourcingExtension"></a>
       <a id="EventsourcingExtension:EventsourcingExtension"></a>
       <h4 class="signature">

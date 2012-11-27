@@ -47,14 +47,19 @@
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A persistent channel that sends event <a href="Message.html" class="extype" name="org.eligosource.eventsourced.core.Message">org.eligosource.eventsourced.core.Message</a>s to
 <code>destination</code>. Every event message sent to this channel is stored in the journal together
 with an <i>acknowledgement</i> (which is used during replay to decide if the channel should
-ignore a message or not). If <code>destination</code> positively confirms the receipt of an event
-message with <code>Message.confirm()</code> the stored message is deleted from the journal. If
-<code>destination</code> negatively confirms the receipt of an event message with <code>Message.confirm(false)</code>
-or no confirmation was made (i.e. a timeout occurred), a re-delivery attempt is made. If the
-maximum number of re-delivery attempts have been made, the channel restarts itself after
-a certain <i>restart delay</i> (and starts again with re-deliveries).</p><p>A <code>ReliableChannel</code> preserves the <code>sender</code> reference (i.e. forwards it to <code>destination</code>) only
-after initial delivery (which occurs, for example, during <code>EventsourcingExtension.recover()</code>
-or <code>EventsourcingExtension.deliver()</code>).
+ignore a message or not).</p><p>If <code>destination</code> positively confirms the receipt of an event message with <code>Message.confirm()</code>
+the stored message is deleted from the journal. If <code>destination</code> negatively confirms the
+receipt of an event message with <code>Message.confirm(false)</code> or no confirmation is made (i.e.
+a timeout occurrs), a re-delivery attempt is made after a certain <i>redelivery delay</i>
+(specified by <code>policy.redeliveryDelay</code>).</p><p>If the maximum number of re-delivery attempts have been made (specified by <code>policy.redeliveryMax</code>),
+the channel restarts itself after a certain <i>restart delay</i> (specified by <code>policy.restartDelay</code>)
+and starts again with re-deliveries. If the maximum number of restarts has been reached (specified
+by <code>policy.restartMax</code>) the channel stops message delivery and publishes a
+<a href="Channel$$DeliveryStopped.html" class="extype" name="org.eligosource.eventsourced.core.Channel.DeliveryStopped">org.eligosource.eventsourced.core.Channel.DeliveryStopped</a> event to the event stream of the
+<span class="extype" name="akka.actor.ActorSystem">akka.actor.ActorSystem</span> this channel belongs to. Applications can then re-activate the channel
+by calling <code>EventsourcingExtension.deliver(Int)</code> with the channel id as argument.</p><p>A <code>ReliableChannel</code> preserves <code>sender</code> references (i.e. forwards them to <code>destination</code>) only
+after initial delivery (which can be triggered, by calling <code>EventsourcingExtension.recover()</code>,
+<code>EventsourcingExtension.deliver()</code> or <code>EventsourcingExtension.deliver(Int)</code>).
 </p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="Journal$$WriteAck.html" class="extype" name="org.eligosource.eventsourced.core.Journal.WriteAck">org.eligosource.eventsourced.core.Journal.WriteAck</a>
 </p></span><span class="cmt"><p><a href="Journal$$WriteOutMsg.html" class="extype" name="org.eligosource.eventsourced.core.Journal.WriteOutMsg">org.eligosource.eventsourced.core.Journal.WriteOutMsg</a></p></span><span class="cmt"><p><a href="RedeliveryPolicy.html" class="extype" name="org.eligosource.eventsourced.core.RedeliveryPolicy">org.eligosource.eventsourced.core.RedeliveryPolicy</a></p></span><span class="cmt"><p><a href="Channel.html" class="extype" name="org.eligosource.eventsourced.core.Channel">org.eligosource.eventsourced.core.Channel</a></p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>

@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>RedeliveryPolicy - org.eligosource.eventsourced.core.RedeliveryPolicy</title>
-          <meta name="description" content="RedeliveryPolicy - org.eligosource.eventsourced.core.RedeliveryPolicy" />
-          <meta name="keywords" content="RedeliveryPolicy org.eligosource.eventsourced.core.RedeliveryPolicy" />
+          <title>DeliveryStopped - org.eligosource.eventsourced.core.Channel.DeliveryStopped</title>
+          <meta name="description" content="DeliveryStopped - org.eligosource.eventsourced.core.Channel.DeliveryStopped" />
+          <meta name="keywords" content="DeliveryStopped org.eligosource.eventsourced.core.Channel.DeliveryStopped" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
@@ -17,7 +17,7 @@
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
-            var hash = 'org.eligosource.eventsourced.core.RedeliveryPolicy$';
+            var hash = 'org.eligosource.eventsourced.core.Channel$$DeliveryStopped';
             var anchor = window.location.hash;
             var anchor_opt = '';
             if (anchor.length >= 1)
@@ -27,26 +27,32 @@
    	  </script>
     
         </head>
-        <body class="value">
+        <body class="type">
       <div id="definition">
-        <a href="RedeliveryPolicy.html" title="Go to companion"><img src="../../../../lib/object_to_class_big.png" /></a>
-        <p id="owner"><a href="../../../package.html" class="extype" name="org">org</a>.<a href="../../package.html" class="extype" name="org.eligosource">eligosource</a>.<a href="../package.html" class="extype" name="org.eligosource.eventsourced">eventsourced</a>.<a href="package.html" class="extype" name="org.eligosource.eventsourced.core">core</a></p>
-        <h1><a href="RedeliveryPolicy.html" title="Go to companion">RedeliveryPolicy</a></h1>
+        <img src="../../../../lib/class_big.png" />
+        <p id="owner"><a href="../../../package.html" class="extype" name="org">org</a>.<a href="../../package.html" class="extype" name="org.eligosource">eligosource</a>.<a href="../package.html" class="extype" name="org.eligosource.eventsourced">eventsourced</a>.<a href="package.html" class="extype" name="org.eligosource.eventsourced.core">core</a>.<a href="Channel$.html" class="extype" name="org.eligosource.eventsourced.core.Channel">Channel</a></p>
+        <h1>DeliveryStopped</h1>
       </div>
 
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">object</span>
+        <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">RedeliveryPolicy</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">DeliveryStopped</span><span class="params">(<span name="channelId">channelId: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Channel event that is published when a reliable channel (identified by <code>channelId</code>)
+stops event message delivery. The event is published to the event stream of the
+<span class="extype" name="akka.actor.ActorSystem">akka.actor.ActorSystem</span> the reliable channel belongs to.
+</p></div><dl class="paramcmts block"><dt class="param">channelId</dt><dd class="cmt"><p>id of the reliable channel that stopped event message
+       delivery.
+</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="ReliableChannel.html" class="extype" name="org.eligosource.eventsourced.core.ReliableChannel">org.eligosource.eventsourced.core.ReliableChannel</a>
+</p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.Product">Product</span>, <span class="extype" name="scala.Equals">Equals</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -64,7 +70,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="org.eligosource.eventsourced.core.RedeliveryPolicy"><span>RedeliveryPolicy</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="org.eligosource.eventsourced.core.Channel.DeliveryStopped"><span>DeliveryStopped</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.Product"><span>Product</span></li><li class="in" name="scala.Equals"><span>Equals</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -82,7 +88,25 @@
 
       <div id="template">
         <div id="allMembers">
-        
+        <div id="constructors" class="members">
+              <h3>Instance Constructors</h3>
+              <ol><li name="org.eligosource.eventsourced.core.Channel.DeliveryStopped#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="&lt;init&gt;(channelId:Int):org.eligosource.eventsourced.core.Channel.DeliveryStopped"></a>
+      <a id="&lt;init&gt;:DeliveryStopped"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">new</span>
+      </span>
+      <span class="symbol">
+        <span class="name">DeliveryStopped</span><span class="params">(<span name="channelId">channelId: <span class="extype" name="scala.Int">Int</span></span>)</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">channelId</dt><dd class="cmt"><p>id of the reliable channel that stopped event message
+       delivery.
+</p></dd></dl></div>
+    </li></ol>
+            </div>
 
         
 
@@ -155,84 +179,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="org.eligosource.eventsourced.core.RedeliveryPolicy#DefaultConfirmationTimeout" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="DefaultConfirmationTimeout:scala.concurrent.duration.FiniteDuration"></a>
-      <a id="DefaultConfirmationTimeout:FiniteDuration"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">DefaultConfirmationTimeout</span><span class="result">: <span class="extype" name="scala.concurrent.duration.FiniteDuration">FiniteDuration</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Default confirmation timeout: 5 seconds</p>
-    </li><li name="org.eligosource.eventsourced.core.RedeliveryPolicy#DefaultRedeliveryDelay" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="DefaultRedeliveryDelay:scala.concurrent.duration.FiniteDuration"></a>
-      <a id="DefaultRedeliveryDelay:FiniteDuration"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">DefaultRedeliveryDelay</span><span class="result">: <span class="extype" name="scala.concurrent.duration.FiniteDuration">FiniteDuration</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Default re-delivery delay: 1 second</p>
-    </li><li name="org.eligosource.eventsourced.core.RedeliveryPolicy#DefaultRedeliveryMax" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="DefaultRedeliveryMax:Int"></a>
-      <a id="DefaultRedeliveryMax:Int"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">DefaultRedeliveryMax</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="org.eligosource.eventsourced.core.RedeliveryPolicy#DefaultRestartDelay" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="DefaultRestartDelay:scala.concurrent.duration.FiniteDuration"></a>
-      <a id="DefaultRestartDelay:FiniteDuration"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">DefaultRestartDelay</span><span class="result">: <span class="extype" name="scala.concurrent.duration.FiniteDuration">FiniteDuration</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Default restart delay: 5 seconds</p>
-    </li><li name="org.eligosource.eventsourced.core.RedeliveryPolicy#DefaultRestartMax" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="DefaultRestartMax:Int"></a>
-      <a id="DefaultRestartMax:Int"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">DefaultRestartMax</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="org.eligosource.eventsourced.core.RedeliveryPolicy#apply" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="apply():org.eligosource.eventsourced.core.RedeliveryPolicy"></a>
-      <a id="apply():RedeliveryPolicy"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">apply</span><span class="params">()</span><span class="result">: <a href="RedeliveryPolicy.html" class="extype" name="org.eligosource.eventsourced.core.RedeliveryPolicy">RedeliveryPolicy</a></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Returns a <a href="RedeliveryPolicy.html" class="extype" name="org.eligosource.eventsourced.core.RedeliveryPolicy">org.eligosource.eventsourced.core.RedeliveryPolicy</a> with default settings.</p>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -246,6 +192,20 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="org.eligosource.eventsourced.core.Channel.DeliveryStopped#channelId" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="channelId:Int"></a>
+      <a id="channelId:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">channelId</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">id of the reliable channel that stopped event message
+       delivery.</p>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
       <a id="clone():AnyRef"></a>
@@ -275,19 +235,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="equals(x$1:Any):Boolean"></a>
-      <a id="equals(Any):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <a id="finalize():Unit"></a>
@@ -314,19 +261,6 @@
       </span>
       <span class="symbol">
         <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="hashCode():Int"></a>
-      <a id="hashCode():Int"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -395,19 +329,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="toString():String"></a>
-      <a id="toString():String"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
@@ -469,6 +390,10 @@
               <h3>Inherited from <span class="extype" name="scala.Serializable">Serializable</span></h3>
             </div><div class="parent" name="java.io.Serializable">
               <h3>Inherited from <span class="extype" name="java.io.Serializable">Serializable</span></h3>
+            </div><div class="parent" name="scala.Product">
+              <h3>Inherited from <span class="extype" name="scala.Product">Product</span></h3>
+            </div><div class="parent" name="scala.Equals">
+              <h3>Inherited from <span class="extype" name="scala.Equals">Equals</span></h3>
             </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
             </div><div class="parent" name="scala.Any">

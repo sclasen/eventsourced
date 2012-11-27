@@ -40,14 +40,14 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">RedeliveryPolicy</span><span class="params">(<span name="confirmationTimeout">confirmationTimeout: <span class="extype" name="scala.concurrent.duration.FiniteDuration">FiniteDuration</span></span>, <span name="restartDelay">restartDelay: <span class="extype" name="scala.concurrent.duration.FiniteDuration">FiniteDuration</span></span>, <span name="redeliveryDelay">redeliveryDelay: <span class="extype" name="scala.concurrent.duration.FiniteDuration">FiniteDuration</span></span>, <span name="redeliveryMax">redeliveryMax: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">RedeliveryPolicy</span><span class="params">(<span name="confirmationTimeout">confirmationTimeout: <span class="extype" name="scala.concurrent.duration.FiniteDuration">FiniteDuration</span></span>, <span name="restartDelay">restartDelay: <span class="extype" name="scala.concurrent.duration.FiniteDuration">FiniteDuration</span></span>, <span name="restartMax">restartMax: <span class="extype" name="scala.Int">Int</span></span>, <span name="redeliveryDelay">redeliveryDelay: <span class="extype" name="scala.concurrent.duration.FiniteDuration">FiniteDuration</span></span>, <span name="redeliveryMax">redeliveryMax: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Redelivery policy for a <a href="ReliableChannel.html" class="extype" name="org.eligosource.eventsourced.core.ReliableChannel">org.eligosource.eventsourced.core.ReliableChannel</a>.
 </p></div><dl class="paramcmts block"><dt class="param">confirmationTimeout</dt><dd class="cmt"><p>Duration to wait for a confirmation. If that duration is
        exceeded a re-delivery is attempted.</p></dd><dt class="param">restartDelay</dt><dd class="cmt"><p>Delay for re-starting a reliable channel that has been stopped
-       after having reached the maximum number of re-delivery attempts.</p></dd><dt class="param">redeliveryDelay</dt><dd class="cmt"><p>Delay between re-delivery attempts.</p></dd><dt class="param">redeliveryMax</dt><dd class="cmt"><p>Maximum number of re-delivery attempts.
+       after having reached the maximum number of re-delivery attempts.</p></dd><dt class="param">restartMax</dt><dd class="cmt"><p>Maximum number of re-starts.</p></dd><dt class="param">redeliveryDelay</dt><dd class="cmt"><p>Delay between re-delivery attempts.</p></dd><dt class="param">redeliveryMax</dt><dd class="cmt"><p>Maximum number of re-delivery attempts.
 </p></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.Product">Product</span>, <span class="extype" name="scala.Equals">Equals</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
@@ -89,7 +89,7 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="org.eligosource.eventsourced.core.RedeliveryPolicy#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="&lt;init&gt;(confirmationTimeout:scala.concurrent.duration.FiniteDuration,restartDelay:scala.concurrent.duration.FiniteDuration,redeliveryDelay:scala.concurrent.duration.FiniteDuration,redeliveryMax:Int):org.eligosource.eventsourced.core.RedeliveryPolicy"></a>
+      <a id="&lt;init&gt;(confirmationTimeout:scala.concurrent.duration.FiniteDuration,restartDelay:scala.concurrent.duration.FiniteDuration,restartMax:Int,redeliveryDelay:scala.concurrent.duration.FiniteDuration,redeliveryMax:Int):org.eligosource.eventsourced.core.RedeliveryPolicy"></a>
       <a id="&lt;init&gt;:RedeliveryPolicy"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -97,12 +97,12 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">RedeliveryPolicy</span><span class="params">(<span name="confirmationTimeout">confirmationTimeout: <span class="extype" name="scala.concurrent.duration.FiniteDuration">FiniteDuration</span></span>, <span name="restartDelay">restartDelay: <span class="extype" name="scala.concurrent.duration.FiniteDuration">FiniteDuration</span></span>, <span name="redeliveryDelay">redeliveryDelay: <span class="extype" name="scala.concurrent.duration.FiniteDuration">FiniteDuration</span></span>, <span name="redeliveryMax">redeliveryMax: <span class="extype" name="scala.Int">Int</span></span>)</span>
+        <span class="name">RedeliveryPolicy</span><span class="params">(<span name="confirmationTimeout">confirmationTimeout: <span class="extype" name="scala.concurrent.duration.FiniteDuration">FiniteDuration</span></span>, <span name="restartDelay">restartDelay: <span class="extype" name="scala.concurrent.duration.FiniteDuration">FiniteDuration</span></span>, <span name="restartMax">restartMax: <span class="extype" name="scala.Int">Int</span></span>, <span name="redeliveryDelay">redeliveryDelay: <span class="extype" name="scala.concurrent.duration.FiniteDuration">FiniteDuration</span></span>, <span name="redeliveryMax">redeliveryMax: <span class="extype" name="scala.Int">Int</span></span>)</span>
       </span>
       </h4>
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">confirmationTimeout</dt><dd class="cmt"><p>Duration to wait for a confirmation. If that duration is
        exceeded a re-delivery is attempted.</p></dd><dt class="param">restartDelay</dt><dd class="cmt"><p>Delay for re-starting a reliable channel that has been stopped
-       after having reached the maximum number of re-delivery attempts.</p></dd><dt class="param">redeliveryDelay</dt><dd class="cmt"><p>Delay between re-delivery attempts.</p></dd><dt class="param">redeliveryMax</dt><dd class="cmt"><p>Maximum number of re-delivery attempts.
+       after having reached the maximum number of re-delivery attempts.</p></dd><dt class="param">restartMax</dt><dd class="cmt"><p>Maximum number of re-starts.</p></dd><dt class="param">redeliveryDelay</dt><dd class="cmt"><p>Delay between re-delivery attempts.</p></dd><dt class="param">redeliveryMax</dt><dd class="cmt"><p>Maximum number of re-delivery attempts.
 </p></dd></dl></div>
     </li></ol>
             </div>
@@ -355,6 +355,19 @@
       </h4>
       <p class="shortcomment cmt">Delay for re-starting a reliable channel that has been stopped
        after having reached the maximum number of re-delivery attempts.</p>
+    </li><li name="org.eligosource.eventsourced.core.RedeliveryPolicy#restartMax" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="restartMax:Int"></a>
+      <a id="restartMax:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">restartMax</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Maximum number of re-starts.</p>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>

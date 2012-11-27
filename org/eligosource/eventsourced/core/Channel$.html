@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>ReliableChannel - org.eligosource.eventsourced.core.ReliableChannel</title>
-          <meta name="description" content="ReliableChannel - org.eligosource.eventsourced.core.ReliableChannel" />
-          <meta name="keywords" content="ReliableChannel org.eligosource.eventsourced.core.ReliableChannel" />
+          <title>Channel - org.eligosource.eventsourced.core.Channel</title>
+          <meta name="description" content="Channel - org.eligosource.eventsourced.core.Channel" />
+          <meta name="keywords" content="Channel org.eligosource.eventsourced.core.Channel" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
@@ -17,7 +17,7 @@
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
-            var hash = 'org.eligosource.eventsourced.core.ReliableChannel';
+            var hash = 'org.eligosource.eventsourced.core.Channel$';
             var anchor = window.location.hash;
             var anchor_opt = '';
             if (anchor.length >= 1)
@@ -27,43 +27,26 @@
    	  </script>
     
         </head>
-        <body class="type">
+        <body class="value">
       <div id="definition">
-        <img src="../../../../lib/class_big.png" />
+        <a href="Channel.html" title="Go to companion"><img src="../../../../lib/object_to_trait_big.png" /></a>
         <p id="owner"><a href="../../../package.html" class="extype" name="org">org</a>.<a href="../../package.html" class="extype" name="org.eligosource">eligosource</a>.<a href="../package.html" class="extype" name="org.eligosource.eventsourced">eventsourced</a>.<a href="package.html" class="extype" name="org.eligosource.eventsourced.core">core</a></p>
-        <h1>ReliableChannel</h1>
+        <h1><a href="Channel.html" title="Go to companion">Channel</a></h1>
       </div>
 
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">class</span>
+        <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <span class="name">ReliableChannel</span><span class="result"> extends <a href="Channel.html" class="extype" name="org.eligosource.eventsourced.core.Channel">Channel</a></span>
+        <span class="name">Channel</span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A persistent channel that sends event <a href="Message.html" class="extype" name="org.eligosource.eventsourced.core.Message">org.eligosource.eventsourced.core.Message</a>s to
-<code>destination</code>. Every event message sent to this channel is stored in the journal together
-with an <i>acknowledgement</i> (which is used during replay to decide if the channel should
-ignore a message or not).</p><p>If <code>destination</code> positively confirms the receipt of an event message with <code>Message.confirm()</code>
-the stored message is deleted from the journal. If <code>destination</code> negatively confirms the
-receipt of an event message with <code>Message.confirm(false)</code> or no confirmation is made (i.e.
-a timeout occurrs), a re-delivery attempt is made after a certain <i>redelivery delay</i>
-(specified by <code>policy.redeliveryDelay</code>).</p><p>If the maximum number of re-delivery attempts have been made (specified by <code>policy.redeliveryMax</code>),
-the channel restarts itself after a certain <i>restart delay</i> (specified by <code>policy.restartDelay</code>)
-and starts again with re-deliveries. If the maximum number of restarts has been reached (specified
-by <code>policy.restartMax</code>) the channel stops message delivery and publishes a
-<a href="Channel$$DeliveryStopped.html" class="extype" name="org.eligosource.eventsourced.core.Channel.DeliveryStopped">org.eligosource.eventsourced.core.Channel.DeliveryStopped</a> event to the event stream of the
-<span class="extype" name="akka.actor.ActorSystem">akka.actor.ActorSystem</span> this channel belongs to. Applications can then re-activate the channel
-by calling <code>EventsourcingExtension.deliver(Int)</code> with the channel id as argument.</p><p>A <code>ReliableChannel</code> preserves <code>sender</code> references (i.e. forwards them to <code>destination</code>) only
-after initial delivery (which can be triggered, by calling <code>EventsourcingExtension.recover()</code>,
-<code>EventsourcingExtension.deliver()</code> or <code>EventsourcingExtension.deliver(Int)</code>).
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="Journal$$WriteAck.html" class="extype" name="org.eligosource.eventsourced.core.Journal.WriteAck">org.eligosource.eventsourced.core.Journal.WriteAck</a>
-</p></span><span class="cmt"><p><a href="Journal$$WriteOutMsg.html" class="extype" name="org.eligosource.eventsourced.core.Journal.WriteOutMsg">org.eligosource.eventsourced.core.Journal.WriteOutMsg</a></p></span><span class="cmt"><p><a href="RedeliveryPolicy.html" class="extype" name="org.eligosource.eventsourced.core.RedeliveryPolicy">org.eligosource.eventsourced.core.RedeliveryPolicy</a></p></span><span class="cmt"><p><a href="Channel.html" class="extype" name="org.eligosource.eventsourced.core.Channel">org.eligosource.eventsourced.core.Channel</a></p></span></dd></dl><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="Channel.html" class="extype" name="org.eligosource.eventsourced.core.Channel">Channel</a>, <span class="extype" name="akka.actor.Actor">Actor</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -81,7 +64,7 @@ after initial delivery (which can be triggered, by calling <code>EventsourcingEx
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="org.eligosource.eventsourced.core.ReliableChannel"><span>ReliableChannel</span></li><li class="in" name="org.eligosource.eventsourced.core.Channel"><span>Channel</span></li><li class="in" name="akka.actor.Actor"><span>Actor</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="org.eligosource.eventsourced.core.Channel"><span>Channel</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -99,41 +82,24 @@ after initial delivery (which can be triggered, by calling <code>EventsourcingEx
 
       <div id="template">
         <div id="allMembers">
-        <div id="constructors" class="members">
-              <h3>Instance Constructors</h3>
-              <ol><li name="org.eligosource.eventsourced.core.ReliableChannel#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="&lt;init&gt;(id:Int,journal:akka.actor.ActorRef,destination:akka.actor.ActorRef,policy:org.eligosource.eventsourced.core.RedeliveryPolicy,dispatcherName:Option[String]):org.eligosource.eventsourced.core.ReliableChannel"></a>
-      <a id="&lt;init&gt;:ReliableChannel"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">new</span>
-      </span>
-      <span class="symbol">
-        <span class="name">ReliableChannel</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Int">Int</span></span>, <span name="journal">journal: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>, <span name="destination">destination: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>, <span name="policy">policy: <a href="RedeliveryPolicy.html" class="extype" name="org.eligosource.eventsourced.core.RedeliveryPolicy">RedeliveryPolicy</a></span>, <span name="dispatcherName">dispatcherName: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>)</span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">id</dt><dd class="cmt"><p>channel id. Must be a positive integer.</p></dd><dt class="param">journal</dt><dd class="cmt"><p>journal of the <a href="EventsourcingExtension.html" class="extype" name="org.eligosource.eventsourced.core.EventsourcingExtension">org.eligosource.eventsourced.core.EventsourcingExtension</a>
-       at which this channel is registered.</p></dd><dt class="param">destination</dt><dd class="cmt"><p>delivery destination of event messages added to this channel.</p></dd><dt class="param">policy</dt><dd class="cmt"><p>redelivery policy.</p></dd><dt class="param">dispatcherName</dt><dd class="cmt"><p>optional dispatcher name.
-</p></dd></dl></div>
-    </li></ol>
-            </div>
+        
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="akka.actor.Actor.Receive" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="Receive=akka.actor.Actor.Receive"></a>
-      <a id="Receive:Receive"></a>
+              <ol><li name="org.eligosource.eventsourced.core.Channel.DeliveryStopped" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DeliveryStoppedextendsProductwithSerializable"></a>
+      <a id="DeliveryStopped:DeliveryStopped"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">type</span>
+        <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">Receive</span><span class="result"> = <span class="extype" name="scala.PartialFunction">PartialFunction</span>[<span class="extype" name="scala.Any">Any</span>, <span class="extype" name="scala.Unit">Unit</span>]</span>
+        <a href="Channel$$DeliveryStopped.html"><span class="name">DeliveryStopped</span></a><span class="params">(<span name="channelId">channelId: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Actor</dd></dl></div>
+      <p class="comment cmt">Channel event that is published when a reliable channel (identified by <code>channelId</code>)
+stops event message delivery.</p>
     </li></ol>
             </div>
 
@@ -206,6 +172,19 @@ after initial delivery (which can be triggered, by calling <code>EventsourcingEx
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="org.eligosource.eventsourced.core.Channel.Deliver" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Deliver"></a>
+      <a id="Deliver:Deliver"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Channel$$Deliver$.html"><span class="name">Deliver</span></a><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Channel command for starting delivery of pending event messages.</p>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -235,32 +214,6 @@ after initial delivery (which can be triggered, by calling <code>EventsourcingEx
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="akka.actor.Actor#context" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="context:akka.actor.ActorContext"></a>
-      <a id="context:ActorContext"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">context</span><span class="result">: <span class="extype" name="akka.actor.ActorContext">ActorContext</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../akka/package.html" class="extype" name="akka">akka</a>] </dd><dt>Definition Classes</dt><dd>Actor</dd></dl></div>
-    </li><li name="org.eligosource.eventsourced.core.ReliableChannel#destination" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="destination:akka.actor.ActorRef"></a>
-      <a id="destination:ActorRef"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">destination</span><span class="result">: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">delivery destination of event messages added to this channel.</p><div class="fullcomment"><div class="comment cmt"><p>delivery destination of event messages added to this channel.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="org.eligosource.eventsourced.core.ReliableChannel">ReliableChannel</a> → <a href="Channel.html" class="extype" name="org.eligosource.eventsourced.core.Channel">Channel</a></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -287,19 +240,6 @@ after initial delivery (which can be triggered, by calling <code>EventsourcingEx
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="org.eligosource.eventsourced.core.Channel#executionContext" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="executionContext:akka.dispatch.MessageDispatcher"></a>
-      <a id="executionContext:MessageDispatcher"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">executionContext</span><span class="result">: <span class="extype" name="akka.dispatch.MessageDispatcher">MessageDispatcher</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Channel.html" class="extype" name="org.eligosource.eventsourced.core.Channel">Channel</a></dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <a id="finalize():Unit"></a>
@@ -342,19 +282,6 @@ after initial delivery (which can be triggered, by calling <code>EventsourcingEx
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="org.eligosource.eventsourced.core.ReliableChannel#id" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="id:Int"></a>
-      <a id="id:Int"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">id</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">channel id.</p><div class="fullcomment"><div class="comment cmt"><p>channel id. Must be a positive integer.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="org.eligosource.eventsourced.core.ReliableChannel">ReliableChannel</a> → <a href="Channel.html" class="extype" name="org.eligosource.eventsourced.core.Channel">Channel</a></dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -368,20 +295,6 @@ after initial delivery (which can be triggered, by calling <code>EventsourcingEx
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="org.eligosource.eventsourced.core.ReliableChannel#journal" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="journal:akka.actor.ActorRef"></a>
-      <a id="journal:ActorRef"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">journal</span><span class="result">: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">journal of the <a href="EventsourcingExtension.html" class="extype" name="org.eligosource.eventsourced.core.EventsourcingExtension">org.eligosource.eventsourced.core.EventsourcingExtension</a>
-       at which this channel is registered.</p>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -421,113 +334,6 @@ after initial delivery (which can be triggered, by calling <code>EventsourcingEx
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="akka.actor.Actor#postRestart" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="postRestart(reason:Throwable):Unit"></a>
-      <a id="postRestart(Throwable):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">postRestart</span><span class="params">(<span name="reason">reason: <span class="extype" name="scala.Throwable">Throwable</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Actor</dd></dl></div>
-    </li><li name="org.eligosource.eventsourced.core.Channel#postStop" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="postStop():Unit"></a>
-      <a id="postStop():Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">postStop</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">De-registers this channel from
-<a href="EventsourcingExtension.html" class="extype" name="org.eligosource.eventsourced.core.EventsourcingExtension">org.eligosource.eventsourced.core.EventsourcingExtension</a>.</p><div class="fullcomment"><div class="comment cmt"><p>De-registers this channel from
-<a href="EventsourcingExtension.html" class="extype" name="org.eligosource.eventsourced.core.EventsourcingExtension">org.eligosource.eventsourced.core.EventsourcingExtension</a>.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Channel.html" class="extype" name="org.eligosource.eventsourced.core.Channel">Channel</a> → Actor</dd></dl></div>
-    </li><li name="akka.actor.Actor#preRestart" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="preRestart(reason:Throwable,message:Option[Any]):Unit"></a>
-      <a id="preRestart(Throwable,Option[Any]):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">preRestart</span><span class="params">(<span name="reason">reason: <span class="extype" name="scala.Throwable">Throwable</span></span>, <span name="message">message: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Any">Any</span>]</span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Actor</dd></dl></div>
-    </li><li name="akka.actor.Actor#preStart" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="preStart():Unit"></a>
-      <a id="preStart():Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">preStart</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Actor</dd></dl></div>
-    </li><li name="org.eligosource.eventsourced.core.ReliableChannel#receive" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="receive:PartialFunction[Any,Unit]"></a>
-      <a id="receive:PartialFunction[Any,Unit]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">receive</span><span class="result">: <span class="extype" name="scala.PartialFunction">PartialFunction</span>[<span class="extype" name="scala.Any">Any</span>, <span class="extype" name="scala.Unit">Unit</span>]</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="org.eligosource.eventsourced.core.ReliableChannel">ReliableChannel</a> → Actor</dd></dl></div>
-    </li><li name="akka.actor.Actor#self" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="self:akka.actor.ActorRef"></a>
-      <a id="self:ActorRef"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">implicit final </span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">self</span><span class="result">: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Actor</dd></dl></div>
-    </li><li name="akka.actor.Actor#sender" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="sender:akka.actor.ActorRef"></a>
-      <a id="sender:ActorRef"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">sender</span><span class="result">: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Actor</dd></dl></div>
-    </li><li name="akka.actor.Actor#supervisorStrategy" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="supervisorStrategy:akka.actor.SupervisorStrategy"></a>
-      <a id="supervisorStrategy:SupervisorStrategy"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">supervisorStrategy</span><span class="result">: <span class="extype" name="akka.actor.SupervisorStrategy">SupervisorStrategy</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Actor</dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -554,19 +360,6 @@ after initial delivery (which can be triggered, by calling <code>EventsourcingEx
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="akka.actor.Actor#unhandled" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="unhandled(message:Any):Unit"></a>
-      <a id="unhandled(Any):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">unhandled</span><span class="params">(<span name="message">message: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Actor</dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
@@ -624,11 +417,7 @@ after initial delivery (which can be triggered, by calling <code>EventsourcingEx
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="org.eligosource.eventsourced.core.Channel">
-              <h3>Inherited from <a href="Channel.html" class="extype" name="org.eligosource.eventsourced.core.Channel">Channel</a></h3>
-            </div><div class="parent" name="akka.actor.Actor">
-              <h3>Inherited from <span class="extype" name="akka.actor.Actor">Actor</span></h3>
-            </div><div class="parent" name="scala.AnyRef">
+        <div class="parent" name="scala.AnyRef">
               <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
