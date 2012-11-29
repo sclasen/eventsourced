@@ -119,7 +119,10 @@ object.
         <span class="name">executeBatchReplayInMsgs</span><span class="params">(<span name="cmds">cmds: <span class="extype" name="scala.Seq">Seq</span>[<a href="Journal$$ReplayInMsgs.html" class="extype" name="org.eligosource.eventsourced.core.Journal.ReplayInMsgs">ReplayInMsgs</a>]</span>, <span name="p">p: (<a href="Message.html" class="extype" name="org.eligosource.eventsourced.core.Message">Message</a>, <span class="extype" name="akka.actor.ActorRef">ActorRef</span>) ⇒ <span class="extype" name="scala.Unit">Unit</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Instructs a journal provider to batch-replay input messages.</p><div class="fullcomment"><div class="comment cmt"><p>Instructs a journal provider to batch-replay input messages.
+      <p class="shortcomment cmt">Instructs a journal provider to batch-replay input messages.</p><div class="fullcomment"><div class="comment cmt"><p>Instructs a journal provider to batch-replay input messages. The provider must
+reply to the sender with <a href="Journal$$ReplayDone$.html" class="extype" name="org.eligosource.eventsourced.core.Journal.ReplayDone">org.eligosource.eventsourced.core.Journal.ReplayDone</a>
+when all replayed messages have been added to the corresponding replay targets'
+mailboxes.
 </p></div><dl class="paramcmts block"><dt class="param">cmds</dt><dd class="cmt"><p>command batch to be executed by the journal provider.</p></dd><dt class="param">p</dt><dd class="cmt"><p>function to be called by the provider for every replayed input message.
        The <code>acks</code> field of a replayed input message must contain the channel ids
        of all acknowledgements for that input message. The replay <code>target</code> of the
@@ -155,7 +158,10 @@ object.
         <span class="name">executeReplayInMsgs</span><span class="params">(<span name="cmd">cmd: <a href="Journal$$ReplayInMsgs.html" class="extype" name="org.eligosource.eventsourced.core.Journal.ReplayInMsgs">ReplayInMsgs</a></span>, <span name="p">p: (<a href="Message.html" class="extype" name="org.eligosource.eventsourced.core.Message">Message</a>) ⇒ <span class="extype" name="scala.Unit">Unit</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Instructs a journal provider to replay input messages.</p><div class="fullcomment"><div class="comment cmt"><p>Instructs a journal provider to replay input messages.
+      <p class="shortcomment cmt">Instructs a journal provider to replay input messages.</p><div class="fullcomment"><div class="comment cmt"><p>Instructs a journal provider to replay input messages. The provider must
+reply to the sender with <a href="Journal$$ReplayDone$.html" class="extype" name="org.eligosource.eventsourced.core.Journal.ReplayDone">org.eligosource.eventsourced.core.Journal.ReplayDone</a>
+when all replayed messages have been added to the corresponding replay target's
+mailbox.
 </p></div><dl class="paramcmts block"><dt class="param">cmd</dt><dd class="cmt"><p>command to be executed by the journal provider.</p></dd><dt class="param">p</dt><dd class="cmt"><p>function to be called by the provider for each replayed input message.
        The <code>acks</code> field of a replayed input message must contain the channel ids
        of all acknowledgements for that input message.

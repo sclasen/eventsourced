@@ -112,7 +112,7 @@
         <a href="Journal$$BatchReplayInMsgs.html"><span class="name">BatchReplayInMsgs</span></a><span class="params">(<span name="replays">replays: <span class="extype" name="scala.Seq">Seq</span>[<a href="Journal$$ReplayInMsgs.html" class="extype" name="org.eligosource.eventsourced.core.Journal.ReplayInMsgs">ReplayInMsgs</a>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
-      <p class="comment cmt">Instructs a <code>Journal</code> to batch-replay input messages for multiple <code>Eventsourced</code> processors.</p>
+      <p class="comment cmt">Instructs a <code>Journal</code> to batch-replay input messages to multiple <code>Eventsourced</code> processors.</p>
     </li><li name="org.eligosource.eventsourced.core.Journal.DeleteOutMsg" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="DeleteOutMsgextendsProductwithSerializable"></a>
       <a id="DeleteOutMsg:DeleteOutMsg"></a>
@@ -167,7 +167,7 @@ command.</p>
         <a href="Journal$$ReplayInMsgs.html"><span class="name">ReplayInMsgs</span></a><span class="params">(<span name="processorId">processorId: <span class="extype" name="scala.Int">Int</span></span>, <span name="fromSequenceNr">fromSequenceNr: <span class="extype" name="scala.Long">Long</span></span>, <span name="target">target: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
-      <p class="comment cmt">Instructs a <code>Journal</code> to replay input messages for a single <code>Eventsourced</code> processor.</p>
+      <p class="comment cmt">Instructs a <code>Journal</code> to replay input messages to a single <code>Eventsourced</code> processor.</p>
     </li><li name="org.eligosource.eventsourced.core.Journal.ReplayOutMsgs" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ReplayOutMsgsextendsProductwithSerializable"></a>
       <a id="ReplayOutMsgs:ReplayOutMsgs"></a>
@@ -310,6 +310,19 @@ command.</p>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="org.eligosource.eventsourced.core.Journal.ReplayDone" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ReplayDone"></a>
+      <a id="ReplayDone:ReplayDone"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Journal$$ReplayDone$.html"><span class="name">ReplayDone</span></a><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Response from a journal to a sender when input message replay has been completed.</p>
     </li><li name="org.eligosource.eventsourced.core.Journal#SkipAck" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="SkipAck:Long"></a>
       <a id="SkipAck:Long"></a>
@@ -323,6 +336,22 @@ command.</p>
       </span>
       </h4>
       
+    </li><li name="org.eligosource.eventsourced.core.Journal#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="apply(journalActor:=&gt;org.eligosource.eventsourced.core.Journal,name:Option[String],dispatcherName:Option[String])(implicitsystem:akka.actor.ActorSystem):akka.actor.ActorRef"></a>
+      <a id="apply(⇒Journal,Option[String],Option[String])(ActorSystem):ActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">apply</span><span class="params">(<span name="journalActor">journalActor: ⇒ <a href="Journal.html" class="extype" name="org.eligosource.eventsourced.core.Journal">Journal</a></span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="dispatcherName">dispatcherName: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="system">system: <span class="extype" name="akka.actor.ActorSystem">ActorSystem</span></span>)</span><span class="result">: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Instantiates, configures and returns a <a href="Journal.html" class="extype" name="org.eligosource.eventsourced.core.Journal">org.eligosource.eventsourced.core.Journal</a> actor.</p><div class="fullcomment"><div class="comment cmt"><p>Instantiates, configures and returns a <a href="Journal.html" class="extype" name="org.eligosource.eventsourced.core.Journal">org.eligosource.eventsourced.core.Journal</a> actor.
+</p></div><dl class="paramcmts block"><dt class="param">journalActor</dt><dd class="cmt"><p>journal actor factory.</p></dd><dt class="param">name</dt><dd class="cmt"><p>optional name of the journal actor in the underlying actor system.</p></dd><dt class="param">dispatcherName</dt><dd class="cmt"><p>optional dispatcher name.</p></dd></dl><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt">InvalidActorNameException<p>if <code>name</code> is defined and already in use
+        in the underlying actor system.
+</p></span></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>

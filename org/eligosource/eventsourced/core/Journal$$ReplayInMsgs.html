@@ -44,7 +44,7 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Instructs a <code>Journal</code> to replay input messages for a single <code>Eventsourced</code> processor.
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Instructs a <code>Journal</code> to replay input messages to a single <code>Eventsourced</code> processor.
 </p></div><dl class="paramcmts block"><dt class="param">processorId</dt><dd class="cmt"><p>id of the <code>Eventsourced</code> processor.</p></dd><dt class="param">fromSequenceNr</dt><dd class="cmt"><p>sequence number from where the replay should start.</p></dd><dt class="param">target</dt><dd class="cmt"><p>receiver of the replayed messages. The journal sends the
        replayed messages to <code>target</code> wrapped in a
        <a href="Journal$$Written.html" class="extype" name="org.eligosource.eventsourced.core.Journal.Written">org.eligosource.eventsourced.core.Journal.Written</a> message. The
