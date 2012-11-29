@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>LeveldbJournal - org.eligosource.eventsourced.journal.LeveldbJournal</title>
-          <meta name="description" content="LeveldbJournal - org.eligosource.eventsourced.journal.LeveldbJournal" />
-          <meta name="keywords" content="LeveldbJournal org.eligosource.eventsourced.journal.LeveldbJournal" />
+          <title>ReplayDone - org.eligosource.eventsourced.core.Journal.ReplayDone</title>
+          <meta name="description" content="ReplayDone - org.eligosource.eventsourced.core.Journal.ReplayDone" />
+          <meta name="keywords" content="ReplayDone org.eligosource.eventsourced.core.Journal.ReplayDone" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
@@ -17,7 +17,7 @@
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
-            var hash = 'org.eligosource.eventsourced.journal.LeveldbJournal$';
+            var hash = 'org.eligosource.eventsourced.core.Journal$$ReplayDone$';
             var anchor = window.location.hash;
             var anchor_opt = '';
             if (anchor.length >= 1)
@@ -30,8 +30,8 @@
         <body class="value">
       <div id="definition">
         <img src="../../../../lib/object_big.png" />
-        <p id="owner"><a href="../../../package.html" class="extype" name="org">org</a>.<a href="../../package.html" class="extype" name="org.eligosource">eligosource</a>.<a href="../package.html" class="extype" name="org.eligosource.eventsourced">eventsourced</a>.<a href="package.html" class="extype" name="org.eligosource.eventsourced.journal">journal</a></p>
-        <h1>LeveldbJournal</h1>
+        <p id="owner"><a href="../../../package.html" class="extype" name="org">org</a>.<a href="../../package.html" class="extype" name="org.eligosource">eligosource</a>.<a href="../package.html" class="extype" name="org.eligosource.eventsourced">eventsourced</a>.<a href="package.html" class="extype" name="org.eligosource.eventsourced.core">core</a>.<a href="Journal$.html" class="extype" name="org.eligosource.eventsourced.core.Journal">Journal</a></p>
+        <h1>ReplayDone</h1>
       </div>
 
       <h4 id="signature" class="signature">
@@ -40,13 +40,14 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <span class="name">LeveldbJournal</span>
+        <span class="name">ReplayDone</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Response from a journal to a sender when input message replay has been completed.
+</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.Product">Product</span>, <span class="extype" name="scala.Equals">Equals</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -64,7 +65,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="org.eligosource.eventsourced.journal.LeveldbJournal"><span>LeveldbJournal</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="org.eligosource.eventsourced.core.Journal.ReplayDone"><span>ReplayDone</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.Product"><span>Product</span></li><li class="in" name="scala.Equals"><span>Equals</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -155,22 +156,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="org.eligosource.eventsourced.journal.LeveldbJournal#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="apply(dir:java.io.File,name:Option[String],dispatcherName:Option[String])(implicitsystem:akka.actor.ActorSystem):akka.actor.ActorRef"></a>
-      <a id="apply(File,Option[String],Option[String])(ActorSystem):ActorRef"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">apply</span><span class="params">(<span name="dir">dir: <span class="extype" name="java.io.File">File</span></span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="dispatcherName">dispatcherName: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="system">system: <span class="extype" name="akka.actor.ActorSystem">ActorSystem</span></span>)</span><span class="result">: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Creates a LevelDB based journal that organizes entries primarily based on processor id.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a LevelDB based journal that organizes entries primarily based on processor id.
-</p></div><dl class="paramcmts block"><dt class="param">dir</dt><dd class="cmt"><p>journal directory</p></dd><dt class="param">name</dt><dd class="cmt"><p>optional name of the journal actor in the underlying actor system.</p></dd></dl><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt">InvalidActorNameException<p>if <code>name</code> is defined and already in use
-        in the underlying actor system.</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><code>LeveldbJournal.processorStructuredDefault</code>
-</p></span></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -255,19 +240,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="hashCode():Int"></a>
-      <a id="hashCode():Int"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -320,67 +292,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="org.eligosource.eventsourced.journal.LeveldbJournal#processorStructuredDefault" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="processorStructuredDefault(dir:java.io.File,name:Option[String],dispatcherName:Option[String])(implicitsystem:akka.actor.ActorSystem):akka.actor.ActorRef"></a>
-      <a id="processorStructuredDefault(File,Option[String],Option[String])(ActorSystem):ActorRef"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">processorStructuredDefault</span><span class="params">(<span name="dir">dir: <span class="extype" name="java.io.File">File</span></span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="dispatcherName">dispatcherName: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="system">system: <span class="extype" name="akka.actor.ActorSystem">ActorSystem</span></span>)</span><span class="result">: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Creates a <a href="http://code.google.com/p/leveldb/" target="_blank">LevelDB</a> based journal that
-organizes entries primarily based on processor id.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a <a href="http://code.google.com/p/leveldb/" target="_blank">LevelDB</a> based journal that
-organizes entries primarily based on processor id.</p><p>Pros:</p><ul><li>efficient replay of input messages for all processors (batch replay)</li><li>efficient replay of input messages for a single processor</li><li>efficient replay of output messages</li></ul><p>Cons:</p><ul><li>deletion of old entries requires full scan
-</li></ul></div><dl class="paramcmts block"><dt class="param">dir</dt><dd class="cmt"><p>journal directory.</p></dd><dt class="param">name</dt><dd class="cmt"><p>optional name of the journal actor in the underlying actor system.</p></dd><dt class="param">dispatcherName</dt><dd class="cmt"><p>optional dispatcher name.</p></dd></dl><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt">InvalidActorNameException<p>if <code>name</code> is defined and already in use
-        in the underlying actor system.
-</p></span></dd></dl></div>
-    </li><li name="org.eligosource.eventsourced.journal.LeveldbJournal#processorStructuredThrottled" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="processorStructuredThrottled(dir:java.io.File,throttleAfter:Int,throttleFor:scala.concurrent.duration.FiniteDuration,name:Option[String],dispatcherName:Option[String])(implicitsystem:akka.actor.ActorSystem):akka.actor.ActorRef"></a>
-      <a id="processorStructuredThrottled(File,Int,FiniteDuration,Option[String],Option[String])(ActorSystem):ActorRef"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">processorStructuredThrottled</span><span class="params">(<span name="dir">dir: <span class="extype" name="java.io.File">File</span></span>, <span name="throttleAfter">throttleAfter: <span class="extype" name="scala.Int">Int</span> = <span class="symbol">10000</span></span>, <span name="throttleFor">throttleFor: <span class="extype" name="scala.concurrent.duration.FiniteDuration">FiniteDuration</span> = <span class="symbol">100 milliseconds</span></span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="dispatcherName">dispatcherName: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="system">system: <span class="extype" name="akka.actor.ActorSystem">ActorSystem</span></span>)</span><span class="result">: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Creates a <a href="http://code.google.com/p/leveldb/" target="_blank">LevelDB</a> based journal that
-organizes entries primarily based on processor id and additionally supports
-throttled input message replay.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a <a href="http://code.google.com/p/leveldb/" target="_blank">LevelDB</a> based journal that
-organizes entries primarily based on processor id and additionally supports
-throttled input message replay. The journal suspends replay for a certain
-duration, specified by <code>throttleFor</code>, after every n replayed messages,
-specified by <code>throttleAfter</code>.</p><p>Pros:</p><ul><li>efficient replay of input messages for all processors (batch replay), optionally throttled</li><li>efficient replay of input messages for a single processor, optionally throttled</li><li>efficient replay of output messages</li><li>avoids growing of mailboxes of slow processors during replay.</li></ul><p>Cons:</p><ul><li>deletion of old entries requires full scan
-</li></ul></div><dl class="paramcmts block"><dt class="param">dir</dt><dd class="cmt"><p>journal directory.</p></dd><dt class="param">name</dt><dd class="cmt"><p>optional name of the journal actor in the underlying actor system.</p></dd><dt class="param">dispatcherName</dt><dd class="cmt"><p>optional dispatcher name.
-</p></dd></dl><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt">InvalidActorNameException<p>if <code>name</code> is defined and already in use
-        in the underlying actor system.
-</p></span></dd></dl></div>
-    </li><li name="org.eligosource.eventsourced.journal.LeveldbJournal#sequenceStructured" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="sequenceStructured(dir:java.io.File,name:Option[String],dispatcherName:Option[String])(implicitsystem:akka.actor.ActorSystem):akka.actor.ActorRef"></a>
-      <a id="sequenceStructured(File,Option[String],Option[String])(ActorSystem):ActorRef"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">sequenceStructured</span><span class="params">(<span name="dir">dir: <span class="extype" name="java.io.File">File</span></span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="dispatcherName">dispatcherName: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="system">system: <span class="extype" name="akka.actor.ActorSystem">ActorSystem</span></span>)</span><span class="result">: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Creates a <a href="http://code.google.com/p/leveldb/" target="_blank">LevelDB</a> based journal that
-organizes entries primarily based on sequence numbers, keeping input and
-output messages separated.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a <a href="http://code.google.com/p/leveldb/" target="_blank">LevelDB</a> based journal that
-organizes entries primarily based on sequence numbers, keeping input and
-output messages separated.</p><p>Pros:</p><ul><li>efficient replay of input messages for all processors (batch replay with optional lower bound).</li><li>efficient replay of output messages</li><li>efficient deletion of old entries</li></ul><p>Cons:</p><ul><li>replay of input messages for a single processor requires full scan (with optional lower bound)
-</li></ul></div><dl class="paramcmts block"><dt class="param">dir</dt><dd class="cmt"><p>journal directory</p></dd><dt class="param">name</dt><dd class="cmt"><p>optional name of the journal actor in the underlying actor system.</p></dd><dt class="param">dispatcherName</dt><dd class="cmt"><p>optional dispatcher name.</p></dd></dl><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt">InvalidActorNameException<p>if <code>name</code> is defined and already in use
-        in the underlying actor system.
-</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -394,19 +305,6 @@ output messages separated.</p><p>Pros:</p><ul><li>efficient replay of input mess
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="toString():String"></a>
-      <a id="toString():String"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
@@ -464,7 +362,15 @@ output messages separated.</p><p>Pros:</p><ul><li>efficient replay of input mess
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="scala.AnyRef">
+        <div class="parent" name="scala.Serializable">
+              <h3>Inherited from <span class="extype" name="scala.Serializable">Serializable</span></h3>
+            </div><div class="parent" name="java.io.Serializable">
+              <h3>Inherited from <span class="extype" name="java.io.Serializable">Serializable</span></h3>
+            </div><div class="parent" name="scala.Product">
+              <h3>Inherited from <span class="extype" name="scala.Product">Product</span></h3>
+            </div><div class="parent" name="scala.Equals">
+              <h3>Inherited from <span class="extype" name="scala.Equals">Equals</span></h3>
+            </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>

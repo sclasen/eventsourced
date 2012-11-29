@@ -354,9 +354,9 @@ organizes entries primarily based on processor id.</p><p>Pros:</p><ul><li>effici
 organizes entries primarily based on processor id and additionally supports
 throttled input message replay.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a <a href="http://code.google.com/p/leveldb/" target="_blank">LevelDB</a> based journal that
 organizes entries primarily based on processor id and additionally supports
-throttled input message replay. The journal suspends input message replay
-for a duration specified by <code>throttleFor</code> after every <code>throttleAfter</code> replayed
-messages.</p><p>Pros:</p><ul><li>efficient replay of input messages for all processors (batch replay), optionally throttled</li><li>efficient replay of input messages for a single processor, optionally throttled</li><li>efficient replay of output messages</li><li>avoids growing of mailboxes of slow processors during replay.</li></ul><p>Cons:</p><ul><li>deletion of old entries requires full scan
+throttled input message replay. The journal suspends replay for a certain
+duration, specified by <code>throttleFor</code>, after every n replayed messages,
+specified by <code>throttleAfter</code>.</p><p>Pros:</p><ul><li>efficient replay of input messages for all processors (batch replay), optionally throttled</li><li>efficient replay of input messages for a single processor, optionally throttled</li><li>efficient replay of output messages</li><li>avoids growing of mailboxes of slow processors during replay.</li></ul><p>Cons:</p><ul><li>deletion of old entries requires full scan
 </li></ul></div><dl class="paramcmts block"><dt class="param">dir</dt><dd class="cmt"><p>journal directory.</p></dd><dt class="param">name</dt><dd class="cmt"><p>optional name of the journal actor in the underlying actor system.</p></dd><dt class="param">dispatcherName</dt><dd class="cmt"><p>optional dispatcher name.
 </p></dd></dl><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt">InvalidActorNameException<p>if <code>name</code> is defined and already in use
         in the underlying actor system.
