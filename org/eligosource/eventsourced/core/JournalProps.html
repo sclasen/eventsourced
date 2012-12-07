@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>LeveldbJournal - org.eligosource.eventsourced.journal.LeveldbJournal</title>
-          <meta name="description" content="LeveldbJournal - org.eligosource.eventsourced.journal.LeveldbJournal" />
-          <meta name="keywords" content="LeveldbJournal org.eligosource.eventsourced.journal.LeveldbJournal" />
+          <title>JournalProps - org.eligosource.eventsourced.core.JournalProps</title>
+          <meta name="description" content="JournalProps - org.eligosource.eventsourced.core.JournalProps" />
+          <meta name="keywords" content="JournalProps org.eligosource.eventsourced.core.JournalProps" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
@@ -17,7 +17,7 @@
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
-            var hash = 'org.eligosource.eventsourced.journal.LeveldbJournal$';
+            var hash = 'org.eligosource.eventsourced.core.JournalProps';
             var anchor = window.location.hash;
             var anchor_opt = '';
             if (anchor.length >= 1)
@@ -27,27 +27,30 @@
    	  </script>
     
         </head>
-        <body class="value">
+        <body class="type">
       <div id="definition">
-        <img src="../../../../lib/object_big.png" />
-        <p id="owner"><a href="../../../package.html" class="extype" name="org">org</a>.<a href="../../package.html" class="extype" name="org.eligosource">eligosource</a>.<a href="../package.html" class="extype" name="org.eligosource.eventsourced">eventsourced</a>.<a href="package.html" class="extype" name="org.eligosource.eventsourced.journal">journal</a></p>
-        <h1>LeveldbJournal</h1>
+        <img src="../../../../lib/trait_big.png" />
+        <p id="owner"><a href="../../../package.html" class="extype" name="org">org</a>.<a href="../../package.html" class="extype" name="org.eligosource">eligosource</a>.<a href="../package.html" class="extype" name="org.eligosource.eventsourced">eventsourced</a>.<a href="package.html" class="extype" name="org.eligosource.eventsourced.core">core</a></p>
+        <h1>JournalProps</h1>
       </div>
 
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">object</span>
+        <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <span class="name">LeveldbJournal</span>
+        <span class="name">JournalProps</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="LeveldbJournalProps.html" class="extype" name="org.eligosource.eventsourced.journal.LeveldbJournalProps">org.eligosource.eventsourced.journal.LeveldbJournalProps</a>
-</p></span></dd></dl><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Journal actor configuration object.
+</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+        </div><div class="toggleContainer block">
+          <span class="toggle">Known Subclasses</span>
+          <div class="subClasses hiddenContent"><a href="../journal/InmemJournalProps.html" class="extype" name="org.eligosource.eventsourced.journal.InmemJournalProps">InmemJournalProps</a>, <a href="../journal/JournalioJournalProps.html" class="extype" name="org.eligosource.eventsourced.journal.JournalioJournalProps">JournalioJournalProps</a>, <a href="../journal/LeveldbJournalProps.html" class="extype" name="org.eligosource.eventsourced.journal.LeveldbJournalProps">LeveldbJournalProps</a></div>
         </div></div>
         
 
@@ -65,7 +68,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="org.eligosource.eventsourced.journal.LeveldbJournal"><span>LeveldbJournal</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="org.eligosource.eventsourced.core.JournalProps"><span>JournalProps</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -87,10 +90,52 @@
 
         
 
-        
+        <div id="values" class="values members">
+              <h3>Abstract Value Members</h3>
+              <ol><li name="org.eligosource.eventsourced.core.JournalProps#dispatcherName" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="dispatcherName:Option[String]"></a>
+      <a id="dispatcherName:Option[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">dispatcherName</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Optional dispatcher name.</p>
+    </li><li name="org.eligosource.eventsourced.core.JournalProps#journal" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="journal:org.eligosource.eventsourced.core.Journal"></a>
+      <a id="journal:Journal"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">journal</span><span class="result">: <a href="Journal.html" class="extype" name="org.eligosource.eventsourced.core.Journal">Journal</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a <a href="Journal.html" class="extype" name="org.eligosource.eventsourced.core.Journal">org.eligosource.eventsourced.core.Journal</a> actor instance.</p>
+    </li><li name="org.eligosource.eventsourced.core.JournalProps#name" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="name:Option[String]"></a>
+      <a id="name:Option[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">name</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Optional channel name.</p>
+    </li></ol>
+            </div>
 
         <div id="values" class="values members">
-              <h3>Value Members</h3>
+              <h3>Concrete Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:AnyRef):Boolean"></a>
       <a id="!=(AnyRef):Boolean"></a>
@@ -384,42 +429,7 @@
 
         
 
-        <div id="values" class="values members">
-              <h3>Deprecated Value Members</h3>
-              <ol><li name="org.eligosource.eventsourced.journal.LeveldbJournal#processorStructured" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="processorStructured(dir:java.io.File,name:Option[String],dispatcherName:Option[String])(implicitsystem:akka.actor.ActorSystem):akka.actor.ActorRef"></a>
-      <a id="processorStructured(File,Option[String],Option[String])(ActorSystem):ActorRef"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 0.5) use Journal(LeveldbJournalProps(dir)) instead">processorStructured</span><span class="params">(<span name="dir">dir: <span class="extype" name="java.io.File">File</span></span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="dispatcherName">dispatcherName: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="system">system: <span class="extype" name="akka.actor.ActorSystem">ActorSystem</span></span>)</span><span class="result">: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@deprecated</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 0.5)</i> use Journal(LeveldbJournalProps(dir)) instead</p></dd></dl></div>
-    </li><li name="org.eligosource.eventsourced.journal.LeveldbJournal#sequenceStructured" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="sequenceStructured(dir:java.io.File,name:Option[String],dispatcherName:Option[String])(implicitsystem:akka.actor.ActorSystem):akka.actor.ActorRef"></a>
-      <a id="sequenceStructured(File,Option[String],Option[String])(ActorSystem):ActorRef"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 0.5) use Journal(LeveldbJournalProps(dir).withSequenceStructure) instead">sequenceStructured</span><span class="params">(<span name="dir">dir: <span class="extype" name="java.io.File">File</span></span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="dispatcherName">dispatcherName: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="system">system: <span class="extype" name="akka.actor.ActorSystem">ActorSystem</span></span>)</span><span class="result">: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@deprecated</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 0.5)</i> use Journal(LeveldbJournalProps(dir).withSequenceStructure) instead</p></dd></dl></div>
-    </li></ol>
-            </div>
+        
         </div>
 
         <div id="inheritedMembers">

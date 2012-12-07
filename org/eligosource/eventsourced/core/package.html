@@ -239,6 +239,19 @@ based on message sequence number.</p>
       </span>
       </h4>
       <p class="comment cmt">An abstract journal to be implemented by journal providers.</p>
+    </li><li name="org.eligosource.eventsourced.core.JournalProps" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="JournalPropsextendsObject"></a>
+      <a id="JournalProps:JournalProps"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="JournalProps.html"><span class="name">JournalProps</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Journal actor configuration object.</p>
     </li><li name="org.eligosource.eventsourced.core.JournalProtocol" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="JournalProtocolextendsObject"></a>
       <a id="JournalProtocol:JournalProtocol"></a>
@@ -490,6 +503,22 @@ commands.</p>
       </span>
       </h4>
       <p class="comment cmt">Serialization extension access point.</p>
+    </li><li name="org.eligosource.eventsourced.core.package#actor" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="actor(actor:=&gt;akka.actor.Actor,name:Option[String],dispatcherName:Option[String])(implicitactorRefFactory:akka.actor.ActorRefFactory):akka.actor.ActorRef"></a>
+      <a id="actor(⇒Actor,Option[String],Option[String])(ActorRefFactory):ActorRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">actor</span><span class="params">(<span name="actor">actor: ⇒ <span class="extype" name="akka.actor.Actor">Actor</span></span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="dispatcherName">dispatcherName: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="actorRefFactory">actorRefFactory: <span class="extype" name="akka.actor.ActorRefFactory">ActorRefFactory</span></span>)</span><span class="result">: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Instantiates, configures and returns a actor.</p><div class="fullcomment"><div class="comment cmt"><p>Instantiates, configures and returns a actor.
+</p></div><dl class="paramcmts block"><dt class="param">actor</dt><dd class="cmt"><p>actor factory.</p></dd><dt class="param">name</dt><dd class="cmt"><p>optional name of the actor in the underlying actor system.</p></dd><dt class="param">dispatcherName</dt><dd class="cmt"><p>optional dispatcher name.</p></dd></dl><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt">InvalidActorNameException<p>if <code>name</code> is defined and already in use
+        in the underlying actor system.
+</p></span></dd></dl></div>
     </li><li name="org.eligosource.eventsourced.core.package#decorator" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="decorator(processorId:Int,target:akka.actor.ActorRef,transformer:org.eligosource.eventsourced.core.Message=&gt;Any):akka.actor.Actorwithorg.eligosource.eventsourced.core.Eventsourced"></a>
       <a id="decorator(Int,ActorRef,(Message)⇒Any):ActorwithEventsourced"></a>

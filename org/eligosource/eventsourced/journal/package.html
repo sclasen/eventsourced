@@ -84,7 +84,49 @@
         <div id="allMembers">
         
 
-        
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="org.eligosource.eventsourced.journal.InmemJournalProps" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="InmemJournalPropsextendsJournalPropswithProductwithSerializable"></a>
+      <a id="InmemJournalProps:InmemJournalProps"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="InmemJournalProps.html"><span class="name">InmemJournalProps</span></a><span class="params">(<span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>, <span name="dispatcherName">dispatcherName: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>)</span><span class="result"> extends <a href="../core/JournalProps.html" class="extype" name="org.eligosource.eventsourced.core.JournalProps">JournalProps</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Configuration object for an in-memory based journal.</p>
+    </li><li name="org.eligosource.eventsourced.journal.JournalioJournalProps" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="JournalioJournalPropsextendsJournalPropswithProductwithSerializable"></a>
+      <a id="JournalioJournalProps:JournalioJournalProps"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="JournalioJournalProps.html"><span class="name">JournalioJournalProps</span></a><span class="params">(<span name="dir">dir: <span class="extype" name="java.io.File">File</span></span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>, <span name="dispatcherName">dispatcherName: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>, <span name="fsync">fsync: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>, <span name="checksum">checksum: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result"> extends <a href="../core/JournalProps.html" class="extype" name="org.eligosource.eventsourced.core.JournalProps">JournalProps</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Configuration object for a <a href="https://github.com/sbtourist/Journal.IO" target="_blank">Journal.IO</a> based journal.</p>
+    </li><li name="org.eligosource.eventsourced.journal.LeveldbJournalProps" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LeveldbJournalPropsextendsJournalPropswithProductwithSerializable"></a>
+      <a id="LeveldbJournalProps:LeveldbJournalProps"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="LeveldbJournalProps.html"><span class="name">LeveldbJournalProps</span></a><span class="params">(<span name="dir">dir: <span class="extype" name="java.io.File">File</span></span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>, <span name="dispatcherName">dispatcherName: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>, <span name="fsync">fsync: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>, <span name="checksum">checksum: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>, <span name="processorStructured">processorStructured: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">true</span></span>, <span name="throttleAfter">throttleAfter: <span class="extype" name="scala.Int">Int</span> = <span class="symbol">0</span></span>, <span name="throttleFor">throttleFor: <span class="extype" name="scala.concurrent.duration.FiniteDuration">FiniteDuration</span> = <span class="defval" name="scala.concurrent.duration.`package`.DurationInt(100).milliseconds">...</span></span>)</span><span class="result"> extends <a href="../core/JournalProps.html" class="extype" name="org.eligosource.eventsourced.core.JournalProps">JournalProps</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Configuration object for a <a href="http://code.google.com/p/leveldb/" target="_blank">LevelDB</a> based journal.</p>
+    </li></ol>
+            </div>
 
         
 
@@ -102,7 +144,7 @@
         <a href="InmemJournal$.html"><span class="name">InmemJournal</span></a>
       </span>
       </h4>
-      <p class="comment cmt">Creates an in-memory journal for testing purposes.</p>
+      <p class="comment cmt"></p>
     </li><li name="org.eligosource.eventsourced.journal.JournalioJournal" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="JournalioJournal"></a>
       <a id="JournalioJournal:JournalioJournal"></a>
@@ -115,7 +157,7 @@
         <a href="JournalioJournal$.html"><span class="name">JournalioJournal</span></a>
       </span>
       </h4>
-      
+      <p class="comment cmt"></p>
     </li><li name="org.eligosource.eventsourced.journal.LeveldbJournal" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="LeveldbJournal"></a>
       <a id="LeveldbJournal:LeveldbJournal"></a>
@@ -128,7 +170,7 @@
         <a href="LeveldbJournal$.html"><span class="name">LeveldbJournal</span></a>
       </span>
       </h4>
-      
+      <p class="comment cmt"></p>
     </li><li name="org.eligosource.eventsourced.journal.package#counterFromBytes" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="counterFromBytes(bytes:Array[Byte]):Long"></a>
       <a id="counterFromBytes(Array[Byte]):Long"></a>
