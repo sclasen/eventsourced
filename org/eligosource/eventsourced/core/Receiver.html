@@ -55,7 +55,6 @@ myReceiver ! Message(<span class="lit">"foo event"</span>)
     <span class="kw">case</span> <span class="lit">"foo event"</span> <span class="kw">=&gt;</span> {
       <span class="kw">val</span> msg = message          <span class="cmt">// current message</span>
       <span class="kw">val</span> snr = sequenceNr       <span class="cmt">// sequence number of message</span>
-      <span class="kw">val</span> sid = senderMessageId  <span class="cmt">// sender message id of current message (for duplicate detection)</span>
 
       assert(snr &gt; <span class="num">0</span>L)
       <span class="cmt">// ...</span>
@@ -531,22 +530,6 @@ is not of type <a href="Message.html" class="extype" name="org.eligosource.event
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Actor</dd></dl></div>
-    </li><li name="org.eligosource.eventsourced.core.Receiver#senderMessageId" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="senderMessageId:Option[String]"></a>
-      <a id="senderMessageId:Option[String]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">senderMessageId</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Sender message id of current event message.</p><div class="fullcomment"><div class="comment cmt"><p>Sender message id of current event message.
-</p></div><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt">IllegalStateException<p>if the the last message received by this receiver
-is not of type <a href="Message.html" class="extype" name="org.eligosource.eventsourced.core.Message">org.eligosource.eventsourced.core.Message</a>
-</p></span></dd></dl></div>
     </li><li name="org.eligosource.eventsourced.core.Receiver#sequenceNr" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="sequenceNr:Long"></a>
       <a id="sequenceNr:Long"></a>

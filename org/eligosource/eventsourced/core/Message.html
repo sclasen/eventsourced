@@ -40,7 +40,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">Message</span><span class="params">(<span name="event">event: <span class="extype" name="scala.Any">Any</span></span>, <span name="senderMessageId">senderMessageId: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>, <span name="sequenceNr">sequenceNr: <span class="extype" name="scala.Long">Long</span> = <span class="symbol">0L</span></span>, <span name="processorId">processorId: <span class="extype" name="scala.Int">Int</span> = <span class="symbol">0</span></span>, <span name="acks">acks: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">immutable.this.Nil</span></span>, <span name="ack">ack: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">true</span></span>, <span name="posConfirmationTarget">posConfirmationTarget: <span class="extype" name="akka.actor.ActorRef">ActorRef</span> = <span class="symbol">null</span></span>, <span name="posConfirmationMessage">posConfirmationMessage: <span class="extype" name="scala.Any">Any</span> = <span class="symbol">null</span></span>, <span name="negConfirmationTarget">negConfirmationTarget: <span class="extype" name="akka.actor.ActorRef">ActorRef</span> = <span class="symbol">null</span></span>, <span name="negConfirmationMessage">negConfirmationMessage: <span class="extype" name="scala.Any">Any</span> = <span class="symbol">null</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">Message</span><span class="params">(<span name="event">event: <span class="extype" name="scala.Any">Any</span></span>, <span name="sequenceNr">sequenceNr: <span class="extype" name="scala.Long">Long</span> = <span class="symbol">0L</span></span>, <span name="processorId">processorId: <span class="extype" name="scala.Int">Int</span> = <span class="symbol">0</span></span>, <span name="acks">acks: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">immutable.this.Nil</span></span>, <span name="ack">ack: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">true</span></span>, <span name="posConfirmationTarget">posConfirmationTarget: <span class="extype" name="akka.actor.ActorRef">ActorRef</span> = <span class="symbol">null</span></span>, <span name="posConfirmationMessage">posConfirmationMessage: <span class="extype" name="scala.Any">Any</span> = <span class="symbol">null</span></span>, <span name="negConfirmationTarget">negConfirmationTarget: <span class="extype" name="akka.actor.ActorRef">ActorRef</span> = <span class="symbol">null</span></span>, <span name="negConfirmationMessage">negConfirmationMessage: <span class="extype" name="scala.Any">Any</span> = <span class="symbol">null</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
@@ -54,8 +54,7 @@ are called <i>input</i> messages. Processors process input messages and optional
 <a href="Channel.html" class="extype" name="org.eligosource.eventsourced.core.Channel">org.eligosource.eventsourced.core.Channel</a>s. Output messages should be derived
 from input messages using the <code>copy(...)</code> method. Processors may also reply to
 initial senders using the actor's current <code>sender</code> reference.
-</p></div><dl class="paramcmts block"><dt class="param">event</dt><dd class="cmt"><p>Application event (or command).</p></dd><dt class="param">senderMessageId</dt><dd class="cmt"><p>Optional, sender-defined message id that allows receivers
-       to detect duplicates (which may occur during recovery or fail-over).</p></dd><dt class="param">sequenceNr</dt><dd class="cmt"><p>Sequence number that is generated when messages are written
+</p></div><dl class="paramcmts block"><dt class="param">event</dt><dd class="cmt"><p>Application event (or command).</p></dd><dt class="param">sequenceNr</dt><dd class="cmt"><p>Sequence number that is generated when messages are written
        to the journal. Can also be used for detecting duplicates, in special cases.</p></dd><dt class="param">processorId</dt><dd class="cmt"><p>Id of the event processor that stored (and emitted) this message.</p></dd><dt class="param">ack</dt><dd class="cmt"><p>Whether or not an <i>acknowledgement</i> should be written to the journal during
        (or after) delivery of this message by a <a href="Channel.html" class="extype" name="org.eligosource.eventsourced.core.Channel">org.eligosource.eventsourced.core.Channel</a>.
        Used by event processors to indicate a series of output messages (that are derived
@@ -105,7 +104,7 @@ initial senders using the actor's current <code>sender</code> reference.
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="org.eligosource.eventsourced.core.Message#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="&lt;init&gt;(event:Any,senderMessageId:Option[String],sequenceNr:Long,processorId:Int,acks:Seq[Int],ack:Boolean,posConfirmationTarget:akka.actor.ActorRef,posConfirmationMessage:Any,negConfirmationTarget:akka.actor.ActorRef,negConfirmationMessage:Any):org.eligosource.eventsourced.core.Message"></a>
+      <a id="&lt;init&gt;(event:Any,sequenceNr:Long,processorId:Int,acks:Seq[Int],ack:Boolean,posConfirmationTarget:akka.actor.ActorRef,posConfirmationMessage:Any,negConfirmationTarget:akka.actor.ActorRef,negConfirmationMessage:Any):org.eligosource.eventsourced.core.Message"></a>
       <a id="&lt;init&gt;:Message"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -113,11 +112,10 @@ initial senders using the actor's current <code>sender</code> reference.
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">Message</span><span class="params">(<span name="event">event: <span class="extype" name="scala.Any">Any</span></span>, <span name="senderMessageId">senderMessageId: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>, <span name="sequenceNr">sequenceNr: <span class="extype" name="scala.Long">Long</span> = <span class="symbol">0L</span></span>, <span name="processorId">processorId: <span class="extype" name="scala.Int">Int</span> = <span class="symbol">0</span></span>, <span name="acks">acks: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">immutable.this.Nil</span></span>, <span name="ack">ack: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">true</span></span>, <span name="posConfirmationTarget">posConfirmationTarget: <span class="extype" name="akka.actor.ActorRef">ActorRef</span> = <span class="symbol">null</span></span>, <span name="posConfirmationMessage">posConfirmationMessage: <span class="extype" name="scala.Any">Any</span> = <span class="symbol">null</span></span>, <span name="negConfirmationTarget">negConfirmationTarget: <span class="extype" name="akka.actor.ActorRef">ActorRef</span> = <span class="symbol">null</span></span>, <span name="negConfirmationMessage">negConfirmationMessage: <span class="extype" name="scala.Any">Any</span> = <span class="symbol">null</span></span>)</span>
+        <span class="name">Message</span><span class="params">(<span name="event">event: <span class="extype" name="scala.Any">Any</span></span>, <span name="sequenceNr">sequenceNr: <span class="extype" name="scala.Long">Long</span> = <span class="symbol">0L</span></span>, <span name="processorId">processorId: <span class="extype" name="scala.Int">Int</span> = <span class="symbol">0</span></span>, <span name="acks">acks: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">immutable.this.Nil</span></span>, <span name="ack">ack: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">true</span></span>, <span name="posConfirmationTarget">posConfirmationTarget: <span class="extype" name="akka.actor.ActorRef">ActorRef</span> = <span class="symbol">null</span></span>, <span name="posConfirmationMessage">posConfirmationMessage: <span class="extype" name="scala.Any">Any</span> = <span class="symbol">null</span></span>, <span name="negConfirmationTarget">negConfirmationTarget: <span class="extype" name="akka.actor.ActorRef">ActorRef</span> = <span class="symbol">null</span></span>, <span name="negConfirmationMessage">negConfirmationMessage: <span class="extype" name="scala.Any">Any</span> = <span class="symbol">null</span></span>)</span>
       </span>
       </h4>
-      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">event</dt><dd class="cmt"><p>Application event (or command).</p></dd><dt class="param">senderMessageId</dt><dd class="cmt"><p>Optional, sender-defined message id that allows receivers
-       to detect duplicates (which may occur during recovery or fail-over).</p></dd><dt class="param">sequenceNr</dt><dd class="cmt"><p>Sequence number that is generated when messages are written
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">event</dt><dd class="cmt"><p>Application event (or command).</p></dd><dt class="param">sequenceNr</dt><dd class="cmt"><p>Sequence number that is generated when messages are written
        to the journal. Can also be used for detecting duplicates, in special cases.</p></dd><dt class="param">processorId</dt><dd class="cmt"><p>Id of the event processor that stored (and emitted) this message.</p></dd><dt class="param">ack</dt><dd class="cmt"><p>Whether or not an <i>acknowledgement</i> should be written to the journal during
        (or after) delivery of this message by a <a href="Channel.html" class="extype" name="org.eligosource.eventsourced.core.Channel">org.eligosource.eventsourced.core.Channel</a>.
        Used by event processors to indicate a series of output messages (that are derived
@@ -455,20 +453,6 @@ may also delegate this call other actors or threads.
       </span>
       </h4>
       <p class="shortcomment cmt">Id of the event processor that stored (and emitted) this message.</p>
-    </li><li name="org.eligosource.eventsourced.core.Message#senderMessageId" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="senderMessageId:Option[String]"></a>
-      <a id="senderMessageId:Option[String]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">senderMessageId</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Optional, sender-defined message id that allows receivers
-       to detect duplicates (which may occur during recovery or fail-over).</p>
     </li><li name="org.eligosource.eventsourced.core.Message#sequenceNr" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="sequenceNr:Long"></a>
       <a id="sequenceNr:Long"></a>

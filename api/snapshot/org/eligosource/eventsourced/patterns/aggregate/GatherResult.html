@@ -2,22 +2,22 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>ScatterTarget - org.eligosource.eventsourced.patterns.ScatterTarget</title>
-          <meta name="description" content="ScatterTarget - org.eligosource.eventsourced.patterns.ScatterTarget" />
-          <meta name="keywords" content="ScatterTarget org.eligosource.eventsourced.patterns.ScatterTarget" />
+          <title>GatherResult - org.eligosource.eventsourced.patterns.aggregate.GatherResult</title>
+          <meta name="description" content="GatherResult - org.eligosource.eventsourced.patterns.aggregate.GatherResult" />
+          <meta name="keywords" content="GatherResult org.eligosource.eventsourced.patterns.aggregate.GatherResult" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
-      <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
-      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
-      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
-      <script type="text/javascript" src="../../../../lib/template.js"></script>
-      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      <link href="../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../../lib/tools.tooltip.js"></script>
       
       <script type="text/javascript">
          if(top === self) {
-            var url = '../../../../index.html';
-            var hash = 'org.eligosource.eventsourced.patterns.ScatterTarget';
+            var url = '../../../../../index.html';
+            var hash = 'org.eligosource.eventsourced.patterns.aggregate.GatherResult';
             var anchor = window.location.hash;
             var anchor_opt = '';
             if (anchor.length >= 1)
@@ -29,9 +29,9 @@
         </head>
         <body class="type">
       <div id="definition">
-        <img src="../../../../lib/trait_big.png" />
-        <p id="owner"><a href="../../../package.html" class="extype" name="org">org</a>.<a href="../../package.html" class="extype" name="org.eligosource">eligosource</a>.<a href="../package.html" class="extype" name="org.eligosource.eventsourced">eventsourced</a>.<a href="package.html" class="extype" name="org.eligosource.eventsourced.patterns">patterns</a></p>
-        <h1>ScatterTarget</h1>
+        <img src="../../../../../lib/trait_big.png" />
+        <p id="owner"><a href="../../../../package.html" class="extype" name="org">org</a>.<a href="../../../package.html" class="extype" name="org.eligosource">eligosource</a>.<a href="../../package.html" class="extype" name="org.eligosource.eventsourced">eventsourced</a>.<a href="../package.html" class="extype" name="org.eligosource.eventsourced.patterns">patterns</a>.<a href="package.html" class="extype" name="org.eligosource.eventsourced.patterns.aggregate">aggregate</a></p>
+        <h1>GatherResult</h1>
       </div>
 
       <h4 id="signature" class="signature">
@@ -40,13 +40,16 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <span class="name">ScatterTarget</span><span class="result"> extends <span class="extype" name="akka.actor.Actor">Actor</span></span>
+        <span class="name">GatherResult</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Self Type</dt><dd><a href="" class="extype" name="org.eligosource.eventsourced.patterns.ScatterTarget">ScatterTarget</a> with <a href="../core/Receiver.html" class="extype" name="org.eligosource.eventsourced.core.Receiver">Receiver</a></dd></dl><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span class="extype" name="akka.actor.Actor">Actor</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+        </div><div class="toggleContainer block">
+          <span class="toggle">Known Subclasses</span>
+          <div class="subClasses hiddenContent"><a href="ScatterGather$$ScatterGatherState.html" class="extype" name="org.eligosource.eventsourced.patterns.aggregate.ScatterGather.ScatterGatherState">ScatterGatherState</a></div>
         </div></div>
         
 
@@ -64,7 +67,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="org.eligosource.eventsourced.patterns.ScatterTarget"><span>ScatterTarget</span></li><li class="in" name="akka.actor.Actor"><span>Actor</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="org.eligosource.eventsourced.patterns.aggregate.GatherResult"><span>GatherResult</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -84,36 +87,33 @@
         <div id="allMembers">
         
 
-        <div id="types" class="types members">
-              <h3>Type Members</h3>
-              <ol><li name="akka.actor.Actor.Receive" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="Receive=akka.actor.Actor.Receive"></a>
-      <a id="Receive:(ScatterTarget.this)#Receive"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">type</span>
-      </span>
-      <span class="symbol">
-        <span class="name">Receive</span><span class="result"> = <span class="extype" name="scala.PartialFunction">PartialFunction</span>[<span class="extype" name="scala.Any">Any</span>, <span class="extype" name="scala.Unit">Unit</span>]</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Actor</dd></dl></div>
-    </li></ol>
-            </div>
+        
 
         <div id="values" class="values members">
               <h3>Abstract Value Members</h3>
-              <ol><li name="org.eligosource.eventsourced.patterns.ScatterTarget#scattered" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="scattered(msg:Any,redeliveries:Int,onSuccess:Any=&gt;Unit,onFailure:Any=&gt;Unit):Unit"></a>
-      <a id="scattered(Any,Int,(Any)⇒Unit,(Any)⇒Unit):Unit"></a>
+              <ol><li name="org.eligosource.eventsourced.patterns.aggregate.GatherResult#gatheredFailure" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="gatheredFailure:Seq[org.eligosource.eventsourced.patterns.aggregate.GatheredFailure]"></a>
+      <a id="gatheredFailure:Seq[GatheredFailure]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">scattered</span><span class="params">(<span name="msg">msg: <span class="extype" name="scala.Any">Any</span></span>, <span name="redeliveries">redeliveries: <span class="extype" name="scala.Int">Int</span></span>, <span name="onSuccess">onSuccess: (<span class="extype" name="scala.Any">Any</span>) ⇒ <span class="extype" name="scala.Unit">Unit</span></span>, <span name="onFailure">onFailure: (<span class="extype" name="scala.Any">Any</span>) ⇒ <span class="extype" name="scala.Unit">Unit</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">gatheredFailure</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<a href="GatheredFailure.html" class="extype" name="org.eligosource.eventsourced.patterns.aggregate.GatheredFailure">GatheredFailure</a>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="org.eligosource.eventsourced.patterns.aggregate.GatherResult#gatheredSuccess" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="gatheredSuccess:Seq[org.eligosource.eventsourced.patterns.aggregate.GatheredSuccess]"></a>
+      <a id="gatheredSuccess:Seq[GatheredSuccess]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">gatheredSuccess</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<a href="GatheredSuccess.html" class="extype" name="org.eligosource.eventsourced.patterns.aggregate.GatheredSuccess">GatheredSuccess</a>]</span>
       </span>
       </h4>
       
@@ -216,19 +216,6 @@
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="akka.actor.Actor#context" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="context:akka.actor.ActorContext"></a>
-      <a id="context:ActorContext"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">context</span><span class="result">: <span class="extype" name="akka.actor.ActorContext">ActorContext</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../akka/package.html" class="extype" name="akka">akka</a>] </dd><dt>Definition Classes</dt><dd>Actor</dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -310,19 +297,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="org.eligosource.eventsourced.patterns.ScatterTarget#lastSequenceNr" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="lastSequenceNr:Long"></a>
-      <a id="lastSequenceNr:Long"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">var</span>
-      </span>
-      <span class="symbol">
-        <span class="name">lastSequenceNr</span><span class="result">: <span class="extype" name="scala.Long">Long</span></span>
-      </span>
-      </h4>
-      
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -362,136 +336,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="akka.actor.Actor#postRestart" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="postRestart(reason:&lt;?&gt;):Unit"></a>
-      <a id="postRestart(Throwable):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">postRestart</span><span class="params">(<span name="reason">reason: <span class="extype" name="scala.Throwable">Throwable</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Actor</dd></dl></div>
-    </li><li name="akka.actor.Actor#postStop" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="postStop():Unit"></a>
-      <a id="postStop():Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">postStop</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Actor</dd></dl></div>
-    </li><li name="akka.actor.Actor#preRestart" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="preRestart(reason:&lt;?&gt;,message:&lt;?&gt;):Unit"></a>
-      <a id="preRestart(Throwable,Option[Any]):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">preRestart</span><span class="params">(<span name="reason">reason: <span class="extype" name="scala.Throwable">Throwable</span></span>, <span name="message">message: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Any">Any</span>]</span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Actor</dd></dl></div>
-    </li><li name="akka.actor.Actor#preStart" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="preStart():Unit"></a>
-      <a id="preStart():Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">preStart</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Actor</dd></dl></div>
-    </li><li name="org.eligosource.eventsourced.patterns.ScatterTarget#receive" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="receive:PartialFunction[Any,Unit]"></a>
-      <a id="receive:PartialFunction[Any,Unit]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">receive</span><span class="result">: <span class="extype" name="scala.PartialFunction">PartialFunction</span>[<span class="extype" name="scala.Any">Any</span>, <span class="extype" name="scala.Unit">Unit</span>]</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="org.eligosource.eventsourced.patterns.ScatterTarget">ScatterTarget</a> → Actor</dd></dl></div>
-    </li><li name="org.eligosource.eventsourced.patterns.ScatterTarget#redeliveries" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="redeliveries:Int"></a>
-      <a id="redeliveries:Int"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">var</span>
-      </span>
-      <span class="symbol">
-        <span class="name">redeliveries</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="org.eligosource.eventsourced.patterns.ScatterTarget#scatterSource" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="scatterSource:Option[akka.actor.ActorRef]"></a>
-      <a id="scatterSource:Option[ActorRef]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">var</span>
-      </span>
-      <span class="symbol">
-        <span class="name">scatterSource</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="akka.actor.ActorRef">ActorRef</span>]</span>
-      </span>
-      </h4>
-      
-    </li><li name="akka.actor.Actor#self" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="self:akka.actor.ActorRef"></a>
-      <a id="self:ActorRef"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">implicit final </span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">self</span><span class="result">: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Actor</dd></dl></div>
-    </li><li name="akka.actor.Actor#sender" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="sender:akka.actor.ActorRef"></a>
-      <a id="sender:ActorRef"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">sender</span><span class="result">: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Actor</dd></dl></div>
-    </li><li name="akka.actor.Actor#supervisorStrategy" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="supervisorStrategy:akka.actor.SupervisorStrategy"></a>
-      <a id="supervisorStrategy:SupervisorStrategy"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">supervisorStrategy</span><span class="result">: <span class="extype" name="akka.actor.SupervisorStrategy">SupervisorStrategy</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Actor</dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -518,19 +362,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="akka.actor.Actor#unhandled" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="unhandled(message:Any):Unit"></a>
-      <a id="unhandled(Any):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">unhandled</span><span class="params">(<span name="message">message: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Actor</dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
@@ -588,9 +419,7 @@
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="akka.actor.Actor">
-              <h3>Inherited from <span class="extype" name="akka.actor.Actor">Actor</span></h3>
-            </div><div class="parent" name="scala.AnyRef">
+        <div class="parent" name="scala.AnyRef">
               <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
