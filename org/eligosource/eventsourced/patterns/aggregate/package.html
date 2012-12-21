@@ -89,8 +89,21 @@
       </span>
       </h4>
       
+    </li><li name="org.eligosource.eventsourced.patterns.aggregate.Gathered" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="GatheredextendsObject"></a>
+      <a id="Gathered:Gathered"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Gathered.html"><span class="name">Gathered</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
     </li><li name="org.eligosource.eventsourced.patterns.aggregate.GatheredFailure" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="GatheredFailureextendsProductwithSerializable"></a>
+      <a id="GatheredFailureextendsGatheredwithProductwithSerializable"></a>
       <a id="GatheredFailure:GatheredFailure"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -98,12 +111,12 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="GatheredFailure.html"><span class="name">GatheredFailure</span></a><span class="params">(<span name="target">target: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>, <span name="msg">msg: <span class="extype" name="scala.Any">Any</span></span>, <span name="replyMsg">replyMsg: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="GatheredFailure.html"><span class="name">GatheredFailure</span></a><span class="params">(<span name="target">target: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>, <span name="msg">msg: <span class="extype" name="scala.Any">Any</span></span>, <span name="replyMsg">replyMsg: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result"> extends <a href="Gathered.html" class="extype" name="org.eligosource.eventsourced.patterns.aggregate.Gathered">Gathered</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
     </li><li name="org.eligosource.eventsourced.patterns.aggregate.GatheredSuccess" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="GatheredSuccessextendsProductwithSerializable"></a>
+      <a id="GatheredSuccessextendsGatheredwithProductwithSerializable"></a>
       <a id="GatheredSuccess:GatheredSuccess"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -111,7 +124,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="GatheredSuccess.html"><span class="name">GatheredSuccess</span></a><span class="params">(<span name="target">target: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>, <span name="msg">msg: <span class="extype" name="scala.Any">Any</span></span>, <span name="replyMsg">replyMsg: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="GatheredSuccess.html"><span class="name">GatheredSuccess</span></a><span class="params">(<span name="target">target: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>, <span name="msg">msg: <span class="extype" name="scala.Any">Any</span></span>, <span name="replyMsg">replyMsg: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result"> extends <a href="Gathered.html" class="extype" name="org.eligosource.eventsourced.patterns.aggregate.Gathered">Gathered</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
