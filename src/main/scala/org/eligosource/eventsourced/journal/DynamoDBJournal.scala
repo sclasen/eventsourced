@@ -7,8 +7,8 @@ import collection.mutable.Buffer
 import com.amazonaws.services.dynamodb.AmazonDynamoDB
 import com.amazonaws.services.dynamodb.model._
 import com.amazonaws.services.dynamodb.model.{Key => DynamoKey}
+import java.nio.ByteBuffer
 import java.util.Collections
-import org.apache.commons.codec.binary.Base64
 import org.eligosource.eventsourced.core.Journal._
 import org.eligosource.eventsourced.core.{Serialization, Message, Journal}
 
@@ -41,7 +41,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Journal {
   protected def storedCounter: Long = {
     log.debug("storedCounter")
     val res: GetItemResult = dynamo.getItem(new GetItemRequest().withTableName(props.journalTable).withKey(counterKey))
-    Option(res.getItem).map(_.get(Event)).map(a => counterFromBytes(SToBytes(a.getS))).getOrElse(0L)
+    Option(res.getItem).map(_.get(Event)).map(a => counterFromBytes(a.getB.array())).getOrElse(0L)
   }
 
   def executeBatchReplayInMsgs(cmds: Seq[ReplayInMsgs], p: (Message, ActorRef) => Unit) {
@@ -135,7 +135,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Journal {
 
   def queryAll(q: QueryRequest): (Buffer[Message], Option[DynamoKey]) = {
     val res: QueryResult = dynamo.query(q)
-    val messages = res.getItems.asScala.map(m => SToBytes(m.get(Event).getS)).map(b => msgFromBytes(b))
+    val messages = res.getItems.asScala.map(m => m.get(Event).getB).map(b => msgFromBytes(b.array()))
     (messages, Option(res.getLastEvaluatedKey))
   }
 
@@ -152,7 +152,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Journal {
 
   def NS(value: Long): AttributeValue = new AttributeValue().withNS(value.toString)
 
-  def B(value: Array[Byte]): AttributeValue = new AttributeValue().withS(bytesToS(value))
+  def B(value: Array[Byte]): AttributeValue = new AttributeValue().withB(ByteBuffer.wrap(value))
 
   def UB(value: Array[Byte]): AttributeValueUpdate = new AttributeValueUpdate().withAction(AttributeAction.PUT).withValue(B(value))
 
@@ -234,10 +234,6 @@ object DynamoDBJournal {
       waitForActiveTable(table, retries - 1)
     }
   }
-
-  def bytesToS(bytes: Array[Byte]): String = new String(Base64.encodeBase64(bytes), "UTF-8")
-
-  def SToBytes(sAttribute: String) = Base64.decodeBase64(sAttribute.getBytes("UTF-8"))
 
 
 }

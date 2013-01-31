@@ -20,13 +20,4 @@ class DynamoDBJournalSpec extends JournalSpec {
   }
 }
 
-class DynamoDBSerializationSpec extends WordSpec with MustMatchers {
-  "dynamo" should {
-    "serialize and deserialize correctly" in {
-      val foo = "FOO".getBytes()
-      val fooSAtt = DynamoDBJournal.bytesToS(foo)
-      val fooBytes = DynamoDBJournal.SToBytes(fooSAtt)
-      fooBytes must be(foo)
-    }
-  }
-}
+

@@ -44,12 +44,12 @@ object Dependency {
   //  Compile
   // -----------------------------------------------
 
-  val protobuf    = "com.google.protobuf"       %  "protobuf-java"  % "2.4.1" % "compile"
-  val akkaActor   = "com.typesafe.akka"         %% "akka-actor"     % Akka    % "compile"
-  val commonsIo   = "commons-io"                %  "commons-io"     % "2.3"   % "compile"
-  val journalIo   = "journalio"                 %  "journalio"      % "1.2"   % "compile"
-  val levelDbJni  = "org.fusesource.leveldbjni" %  "leveldbjni-all" % "1.4.1" % "compile"
-  val aws         = "com.amazonaws"             % "aws-java-sdk"    % "1.3.9" % "compile"
+  val protobuf    = "com.google.protobuf"       %  "protobuf-java"  % "2.4.1"  % "compile"
+  val akkaActor   = "com.typesafe.akka"         %% "akka-actor"     % Akka     % "compile"
+  val commonsIo   = "commons-io"                %  "commons-io"     % "2.3"    % "compile"
+  val journalIo   = "journalio"                 %  "journalio"      % "1.2"    % "compile"
+  val levelDbJni  = "org.fusesource.leveldbjni" %  "leveldbjni-all" % "1.4.1"  % "compile"
+  val aws         = "com.amazonaws"             % "aws-java-sdk"    % "1.3.30" % "compile"
 
   // -----------------------------------------------
   //  Test
