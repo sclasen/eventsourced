@@ -12,7 +12,15 @@ import java.util.Collections
 import org.eligosource.eventsourced.core.Journal._
 import org.eligosource.eventsourced.core.{Serialization, Message, Journal}
 
-
+/**
+ * Current status:
+ *
+ * Needs more error resilience.
+ *
+ * Needs a strategy for storing Messages with size > 64k.
+ *
+ * Could batch up some writes.
+ */
 class DynamoDBJournal(props: DynamoDBJournalProps) extends Journal {
 
   val serialization = Serialization(context.system)
@@ -40,7 +48,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Journal {
 
   protected def storedCounter: Long = {
     log.debug("storedCounter")
-    val res: GetItemResult = dynamo.getItem(new GetItemRequest().withTableName(props.journalTable).withKey(counterKey))
+    val res: GetItemResult = dynamo.getItem(new GetItemRequest().withTableName(props.journalTable).withKey(counterKey).withConsistentRead(true))
     Option(res.getItem).map(_.get(Event)).map(a => counterFromBytes(a.getB.array())).getOrElse(0L)
   }
 
@@ -120,7 +128,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Journal {
             .withRangeKeyElement(N(message.sequenceNr))
       }.asJava
 
-      val ka = new KeysAndAttributes().withAttributesToGet(Acks).withKeys(keys)
+      val ka = new KeysAndAttributes().withAttributesToGet(Acks).withKeys(keys).withConsistentRead(true)
 
       val batch = new BatchGetItemRequest().withRequestItems(Collections.singletonMap(props.journalTable, ka))
 
