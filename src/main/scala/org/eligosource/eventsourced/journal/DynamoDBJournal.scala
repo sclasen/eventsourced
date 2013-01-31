@@ -69,6 +69,9 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Journal {
     write(counterKey, counter)
     if (cmd.ackSequenceNr != SkipAck)
       executeWriteAck(WriteAck(cmd.ackProcessorId, cmd.channelId, cmd.ackSequenceNr))
+    else
+    //write a -1 to acks so we can be assured of non-nulls on the batch get in replay
+      executeWriteAck(WriteAck(cmd.ackProcessorId, -1, cmd.ackSequenceNr))
   }
 
   def executeWriteInMsg(cmd: WriteInMsg) {
@@ -108,28 +111,30 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Journal {
   }
 
   def confirmingChannels(processorId: Int, messages: Buffer[Message]): Buffer[Message] = {
+    if (messages.isEmpty) messages
+    else {
+      val keys = messages.map {
+        message =>
+          new DynamoKey()
+            .withHashKeyElement(ackKey(processorId))
+            .withRangeKeyElement(N(message.sequenceNr))
+      }.asJava
 
-    val keys = messages.map {
-      message =>
-        new DynamoKey()
-          .withHashKeyElement(ackKey(processorId))
-          .withRangeKeyElement(N(message.sequenceNr))
-    }.asJava
+      val ka = new KeysAndAttributes().withAttributesToGet(Acks).withKeys(keys)
 
-    val ka = new KeysAndAttributes().withAttributesToGet(Acks).withKeys(keys)
+      val batch = new BatchGetItemRequest().withRequestItems(Collections.singletonMap(props.journalTable, ka))
 
-    val batch = new BatchGetItemRequest().withRequestItems(Collections.singletonMap(props.journalTable, ka))
+      val response = dynamo.batchGetItem(batch).getResponses.get(props.journalTable)
 
-    val response = dynamo.batchGetItem(batch).getResponses.get(props.journalTable)
-
-    messages.zipWithIndex.map {
-      case (message, index) =>
-        if (response.getItems.size() > index && response.getItems.get(index) != null) {
-          val acks: Buffer[Int] = response.getItems.get(index).get(Acks).getNS().asScala.map(_.toInt)
-          message.copy(acks = acks)
-        } else {
-          message
-        }
+      messages.zipWithIndex.map {
+        case (message, index) =>
+          if (response.getItems.size() > index && response.getItems.get(index) != null) {
+            val acks: Buffer[Int] = response.getItems.get(index).get(Acks).getNS.asScala.map(_.toInt)
+            message.copy(acks = acks.filter(_ != -1))
+          } else {
+            message
+          }
+      }
     }
   }
 
