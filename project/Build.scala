@@ -29,7 +29,7 @@ object Resolvers {
 object Dependencies {
   import Dependency._
 
-  val core = Seq(akkaActor, akkaCluster, commonsIo, journalIo, levelDbJni, protobuf, scalaTest, scalaActors)
+  val core = Seq(akkaActor, akkaCluster, commonsIo, journalIo, levelDbJni, protobuf, scalaTest, scalaActors, aws)
 }
 
 object Version {
@@ -49,6 +49,7 @@ object Dependency {
   val commonsIo   = "commons-io"                %  "commons-io"     % "2.3"   % "compile"
   val journalIo   = "journalio"                 %  "journalio"      % "1.2"   % "compile"
   val levelDbJni  = "org.fusesource.leveldbjni" %  "leveldbjni-all" % "1.4.1" % "compile"
+  val aws         = "com.amazonaws"             % "aws-java-sdk"    % "1.3.9" % "compile"
 
   // -----------------------------------------------
   //  Test
