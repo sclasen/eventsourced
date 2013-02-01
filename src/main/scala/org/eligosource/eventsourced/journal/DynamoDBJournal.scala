@@ -42,38 +42,38 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Journal {
   implicit val dynamo: AmazonDynamoDB = props.dynamo
 
   def executeDeleteOutMsg(cmd: DeleteOutMsg) {
-    log.debug("executeDeleteOutMsg")
+    log.info("executeDeleteOutMsg")
     val del: DeleteItemRequest = new DeleteItemRequest().withTableName(props.journalTable).withKey(cmd)
     dynamo.deleteItem(del)
   }
 
   protected def storedCounter: Long = {
-    log.debug("storedCounter")
+    log.info("storedCounter")
     val res: GetItemResult = dynamo.getItem(new GetItemRequest().withTableName(props.journalTable).withKey(counterKey).withConsistentRead(true))
     Option(res.getItem).map(_.get(Event)).map(a => counterFromBytes(a.getB.array())).getOrElse(0L)
   }
 
   def executeBatchReplayInMsgs(cmds: Seq[ReplayInMsgs], p: (Message, ActorRef) => Unit) {
-    log.debug("executeBatchReplayInMsgs")
+    log.info("executeBatchReplayInMsgs")
     cmds.foreach(cmd => replayIn(cmd, cmd.processorId, p(_, cmd.target)))
     sender ! ReplayDone
   }
 
   def executeReplayInMsgs(cmd: ReplayInMsgs, p: (Message) => Unit) {
-    log.debug("executeReplayInMsgs")
+    log.info("executeReplayInMsgs")
     replayIn(cmd, cmd.processorId, p)
     sender ! ReplayDone
   }
 
   def executeReplayOutMsgs(cmd: ReplayOutMsgs, p: (Message) => Unit) {
-    log.debug("executeReplayOutMsgs")
+    log.info("executeReplayOutMsgs")
     replayOut(cmd, p)
     //sender ! ReplayDone needed???
   }
 
 
   def executeWriteOutMsg(cmd: WriteOutMsg) {
-    log.debug("executeWriteOutMsg")
+    log.info("executeWriteOutMsg")
     write(cmd, cmd.message.clearConfirmationSettings)
     write(counterKey, counter)
     if (cmd.ackSequenceNr != SkipAck)
@@ -84,14 +84,14 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Journal {
   }
 
   def executeWriteInMsg(cmd: WriteInMsg) {
-    log.debug("executeWriteInMsg")
+    log.info("executeWriteInMsg")
     write(cmd, cmd.message.clearConfirmationSettings)
     write(counterKey, counter)
   }
 
 
   def executeWriteAck(cmd: WriteAck) {
-    log.debug("executeWriteAckMsg")
+    log.info("executeWriteAckMsg")
     val atts = new java.util.HashMap[String, AttributeValueUpdate]()
     atts.put(Acks, new AttributeValueUpdate().withAction(AttributeAction.PUT).withValue(NS(cmd.channelId)))
     val updates: UpdateItemRequest = new UpdateItemRequest().withTableName(props.journalTable).withKey(cmd).withAttributeUpdates(atts)

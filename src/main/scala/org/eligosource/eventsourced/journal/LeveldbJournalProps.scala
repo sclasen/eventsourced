@@ -149,15 +149,13 @@ case class LeveldbJournalProps(
     copy(throttleAfter = throttleAfter, throttleFor = throttleFor)
 
   def journal: Journal = {
-    import LeveldbReplay._
-
-    if (throttledReplay) {
-      new LeveldbJournalPS(this, throttledReplayStrategy)
-    } else if (processorStructured) {
-      new LeveldbJournalPS(this, defaultReplayStrategy)
-    } else {
-      new LeveldbJournalSS(this)
-    }
+    val key = sys.env("AWS_ACCESS_KEY_ID")
+    val secret = sys.env("AWS_SECRET_ACCESS_KEY")
+    val table = "eventsourced.dynamojournal.tests"
+    val app = System.currentTimeMillis().toString
+    val props: DynamoDBJournalProps = DynamoDBJournalProps(table, app, key, secret)
+    DynamoDBJournal.createJournal(table)(props.dynamo)
+    new DynamoDBJournal(props)
   }
 }
 

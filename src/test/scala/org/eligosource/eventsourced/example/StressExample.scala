@@ -30,7 +30,7 @@ import org.eligosource.eventsourced.core.ReliableChannelProps
 class StressExample  extends EventsourcingSpec[Fixture] {
   "An event-sourced application" when {
     "using default channels" should {
-      "be able to deal with reasonable load" ignore { fixture =>
+      "be able to deal with reasonable load" in { fixture =>
         import fixture._
 
         val processor = configure(reliable = false)
@@ -41,7 +41,7 @@ class StressExample  extends EventsourcingSpec[Fixture] {
       }
     }
     "using reliable channels" should {
-      "be able to deal with reasonable load" ignore { fixture =>
+      "be able to deal with reasonable load" in { fixture =>
         import fixture._
 
         val processor = configure(reliable = true)
