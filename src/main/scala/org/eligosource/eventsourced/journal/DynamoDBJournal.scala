@@ -2,6 +2,7 @@ package org.eligosource.eventsourced.journal
 
 import DynamoDBJournal._
 import akka.actor.ActorRef
+import annotation.tailrec
 import collection.JavaConverters._
 import collection.mutable.Buffer
 import com.amazonaws.services.dynamodb.AmazonDynamoDB
@@ -97,25 +98,26 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Journal {
     dynamo.updateItem(updates)
   }
 
-
-  def replayOut(q: QueryRequest, p: (Message) => Unit) {
+  @tailrec
+  private def replayOut(q: QueryRequest, p: (Message) => Unit) {
     val (messages, from) = queryAll(q)
     messages.foreach(p)
-    from.foreach {
+    val moreOpt = from.map {
       k =>
-        val more = q.withExclusiveStartKey(q.getExclusiveStartKey.withRangeKeyElement(k.getRangeKeyElement))
-        replayOut(more, p)
+        q.withExclusiveStartKey(q.getExclusiveStartKey.withRangeKeyElement(k.getRangeKeyElement))
     }
+    if (moreOpt.isEmpty) {} else replayOut(moreOpt.get, p)
   }
 
-  def replayIn(q: QueryRequest, processorId: Int, p: (Message) => Unit) {
+  @tailrec
+  private def replayIn(q: QueryRequest, processorId: Int, p: (Message) => Unit) {
     val (messages, from) = queryAll(q)
     confirmingChannels(processorId, messages).foreach(p)
-    from.foreach {
+    val moreOpt = from.map {
       k =>
-        val more = q.withExclusiveStartKey(q.getExclusiveStartKey.withRangeKeyElement(k.getRangeKeyElement))
-        replayIn(more, processorId, p)
+        q.withExclusiveStartKey(q.getExclusiveStartKey.withRangeKeyElement(k.getRangeKeyElement))
     }
+    if (moreOpt.isEmpty) {} else replayIn(moreOpt.get, processorId, p)
   }
 
   def confirmingChannels(processorId: Int, messages: Buffer[Message]): Buffer[Message] = {
