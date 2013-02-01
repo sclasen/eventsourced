@@ -42,40 +42,42 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Journal {
   implicit val dynamo: AmazonDynamoDB = props.dynamo
 
   def executeDeleteOutMsg(cmd: DeleteOutMsg) {
-    log.info("executeDeleteOutMsg")
+    log.debug("executeDeleteOutMsg")
     val del: DeleteItemRequest = new DeleteItemRequest().withTableName(props.journalTable).withKey(cmd)
     dynamo.deleteItem(del)
   }
 
   protected def storedCounter: Long = {
-    log.info("storedCounter")
+    log.debug("storedCounter")
     val res: GetItemResult = dynamo.getItem(new GetItemRequest().withTableName(props.journalTable).withKey(counterKey).withConsistentRead(true))
     Option(res.getItem).map(_.get(Event)).map(a => counterFromBytes(a.getB.array())).getOrElse(0L)
   }
 
   def executeBatchReplayInMsgs(cmds: Seq[ReplayInMsgs], p: (Message, ActorRef) => Unit) {
-    log.info("executeBatchReplayInMsgs")
+    log.debug("executeBatchReplayInMsgs")
     cmds.foreach(cmd => replayIn(cmd, cmd.processorId, p(_, cmd.target)))
     sender ! ReplayDone
   }
 
   def executeReplayInMsgs(cmd: ReplayInMsgs, p: (Message) => Unit) {
-    log.info("executeReplayInMsgs")
+    log.debug("executeReplayInMsgs")
     replayIn(cmd, cmd.processorId, p)
     sender ! ReplayDone
   }
 
   def executeReplayOutMsgs(cmd: ReplayOutMsgs, p: (Message) => Unit) {
-    log.info("executeReplayOutMsgs")
+    log.debug("executeReplayOutMsgs")
     replayOut(cmd, p)
     //sender ! ReplayDone needed???
   }
 
 
   def executeWriteOutMsg(cmd: WriteOutMsg) {
-    log.info("executeWriteOutMsg")
-    write(cmd, cmd.message.clearConfirmationSettings)
-    write(counterKey, counter)
+    log.debug("executeWriteOutMsg")
+    batchWrite(
+      put(cmd, cmd.message.clearConfirmationSettings),
+      put(counterKey, counter) //conditional write?
+    )
     if (cmd.ackSequenceNr != SkipAck)
       executeWriteAck(WriteAck(cmd.ackProcessorId, cmd.channelId, cmd.ackSequenceNr))
     else
@@ -84,18 +86,17 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Journal {
   }
 
   def executeWriteInMsg(cmd: WriteInMsg) {
-    log.info("executeWriteInMsg")
-    write(cmd, cmd.message.clearConfirmationSettings)
-    write(counterKey, counter)
+    log.debug("executeWriteInMsg")
+    batchWrite(
+      put(cmd, cmd.message.clearConfirmationSettings),
+      put(counterKey, counter)
+    )
   }
 
 
   def executeWriteAck(cmd: WriteAck) {
-    log.info("executeWriteAckMsg")
-    val atts = new java.util.HashMap[String, AttributeValueUpdate]()
-    atts.put(Acks, new AttributeValueUpdate().withAction(AttributeAction.PUT).withValue(NS(cmd.channelId)))
-    val updates: UpdateItemRequest = new UpdateItemRequest().withTableName(props.journalTable).withKey(cmd).withAttributeUpdates(atts)
-    dynamo.updateItem(updates)
+    log.debug("executeWriteAckMsg")
+    writeAck(cmd)
   }
 
   @tailrec
@@ -160,6 +161,30 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Journal {
     val req = new UpdateItemRequest().withKey(key).withTableName(props.journalTable).withAttributeUpdates(atts)
     dynamo.updateItem(req)
   }
+
+  def put(key: DynamoKey, message: Array[Byte]): PutRequest = {
+    val item = new java.util.HashMap[String, AttributeValue]
+    item.put(Id, key.getHashKeyElement)
+    item.put(Sequence, key.getRangeKeyElement)
+    item.put(Event, B(message))
+    new PutRequest().withItem(item)
+  }
+
+  def writeAck(cmd: WriteAck) {
+    val atts = new java.util.HashMap[String, AttributeValueUpdate]()
+    atts.put(Acks, new AttributeValueUpdate().withAction(AttributeAction.PUT).withValue(NS(cmd.channelId)))
+    val updates: UpdateItemRequest = new UpdateItemRequest().withTableName(props.journalTable).withKey(cmd).withAttributeUpdates(atts)
+    dynamo.updateItem(updates)
+  }
+
+  def batchWrite(puts: PutRequest*) {
+    val write = new java.util.HashMap[String, java.util.List[WriteRequest]]
+    val writes = puts.map(new WriteRequest().withPutRequest(_)).asJava
+    write.put(props.journalTable, writes)
+    val batch = new BatchWriteItemRequest().withRequestItems(write)
+    dynamo.batchWriteItem(batch)
+  }
+
 
   def S(value: String): AttributeValue = new AttributeValue().withS(value)
 
