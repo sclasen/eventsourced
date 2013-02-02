@@ -26,6 +26,7 @@ import org.eligosource.eventsourced.core._
 import org.eligosource.eventsourced.example.StressExample._
 import org.eligosource.eventsourced.core.Message
 import org.eligosource.eventsourced.core.ReliableChannelProps
+import concurrent.duration._
 
 class StressExample  extends EventsourcingSpec[Fixture] {
   "An event-sourced application" when {
@@ -45,7 +46,7 @@ class StressExample  extends EventsourcingSpec[Fixture] {
         import fixture._
 
         val processor = configure(reliable = true)
-        extension.recover()
+        extension.recover(2 minutes)
 
         stress(processor, throttle = 7)
         queue.poll(100, TimeUnit.SECONDS) must be(cycles)
