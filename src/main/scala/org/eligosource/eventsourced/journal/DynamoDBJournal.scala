@@ -48,25 +48,25 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Journal {
   }
 
   protected def storedCounter: Long = {
-    log.debug("storedCounter")
+    log.info("storedCounter")
     val res: GetItemResult = dynamo.getItem(new GetItemRequest().withTableName(props.journalTable).withKey(counterKey).withConsistentRead(true))
     Option(res.getItem).map(_.get(Event)).map(a => counterFromBytes(a.getB.array())).getOrElse(0L)
   }
 
   def executeBatchReplayInMsgs(cmds: Seq[ReplayInMsgs], p: (Message, ActorRef) => Unit) {
-    log.debug("executeBatchReplayInMsgs")
+    log.info("executeBatchReplayInMsgs")
     cmds.foreach(cmd => replayIn(cmd, cmd.processorId, p(_, cmd.target)))
     sender ! ReplayDone
   }
 
   def executeReplayInMsgs(cmd: ReplayInMsgs, p: (Message) => Unit) {
-    log.debug("executeReplayInMsgs")
+    log.info("executeReplayInMsgs")
     replayIn(cmd, cmd.processorId, p)
     sender ! ReplayDone
   }
 
   def executeReplayOutMsgs(cmd: ReplayOutMsgs, p: (Message) => Unit) {
-    log.debug("executeReplayOutMsgs")
+    log.info("executeReplayOutMsgs")
     replayOut(cmd, p)
     //sender ! ReplayDone needed???
   }
@@ -80,9 +80,9 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Journal {
     )
     if (cmd.ackSequenceNr != SkipAck)
       executeWriteAck(WriteAck(cmd.ackProcessorId, cmd.channelId, cmd.ackSequenceNr))
-    else
+    //else
     //write a -1 to acks so we can be assured of non-nulls on the batch get in replay
-      executeWriteAck(WriteAck(cmd.ackProcessorId, -1, cmd.ackSequenceNr))
+    //  executeWriteAck(WriteAck(cmd.ackProcessorId, -1, cmd.ackSequenceNr))
   }
 
   def executeWriteInMsg(cmd: WriteInMsg) {
@@ -113,6 +113,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Journal {
   @tailrec
   private def replayIn(q: QueryRequest, processorId: Int, p: (Message) => Unit) {
     val (messages, from) = queryAll(q)
+    log.info(messages.size.toString)
     confirmingChannels(processorId, messages).foreach(p)
     val moreOpt = from.map {
       k =>
@@ -236,6 +237,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Journal {
       .withConsistentRead(true)
       .withHashKeyValue(inKey(re.processorId))
       .withExclusiveStartKey(re)
+      .withLimit(100)
 
   implicit def replayOutToQuery(re: ReplayOutMsgs): QueryRequest =
     new QueryRequest()
@@ -243,6 +245,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Journal {
       .withConsistentRead(true)
       .withHashKeyValue(outKey(re.channelId))
       .withExclusiveStartKey(re)
+      .withLimit(100)
 }
 
 object DynamoDBJournal {

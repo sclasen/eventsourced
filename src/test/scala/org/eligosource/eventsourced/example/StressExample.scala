@@ -55,7 +55,7 @@ class StressExample  extends EventsourcingSpec[Fixture] {
 }
 
 object StressExample {
-  val cycles = 100000
+  val cycles = 1000
 
   class Fixture  extends EventsourcingFixture[Any] {
     val destination = system.actorOf(Props(new Destination(queue) with Receiver with Confirm))
@@ -97,9 +97,14 @@ object StressExample {
   }
 
   class Destination(queue: java.util.Queue[Any]) extends Actor { this: Receiver =>
+    var start = System.currentTimeMillis()
     def receive = {
       case ctr: Int => {
         sender ! ctr
+        if(ctr % 10 == 0) {
+          val time = System.currentTimeMillis() - start
+          println(s"cycle:$ctr $time")
+        }
         if (ctr == cycles) queue.add(ctr)
       }
     }
