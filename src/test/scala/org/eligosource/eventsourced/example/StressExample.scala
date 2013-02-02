@@ -36,8 +36,8 @@ class StressExample  extends EventsourcingSpec[Fixture] {
         val processor = configure(reliable = false)
         extension.recover()
 
-        stress(processor, throttle = 4)
-        queue.poll(100, TimeUnit.SECONDS) must be(cycles)
+        stress(processor, throttle = 400)(Timeout(2000000L),system)
+        queue.poll(200, TimeUnit.SECONDS) must be(cycles)
       }
     }
     "using reliable channels" should {
@@ -47,15 +47,15 @@ class StressExample  extends EventsourcingSpec[Fixture] {
         val processor = configure(reliable = true)
         extension.recover()
 
-        stress(processor, throttle = 7)
-        queue.poll(100, TimeUnit.SECONDS) must be(cycles)
+        stress(processor, throttle = 700)(Timeout(2000000L),system)
+        queue.poll(200, TimeUnit.SECONDS) must be(cycles)
       }
     }
   }
 }
 
 object StressExample {
-  val cycles = 100000
+  val cycles = 30000
 
   class Fixture  extends EventsourcingFixture[Any] {
     val destination = system.actorOf(Props(new Destination(queue) with Receiver with Confirm))
@@ -77,7 +77,7 @@ object StressExample {
       if (i % 100 == 0) Thread.sleep(throttle)
       val nanos = System.nanoTime()
       processor ? Message(i) onSuccess {
-        case r: Int => if (r % 5000 == 0) {
+        case r: Int => if (r % 50 == 0) {
           val now = System.nanoTime()
 
           val latency = (now - nanos) / 1e6
@@ -86,7 +86,7 @@ object StressExample {
           // print some statistics ...
           println("throughput = %.0f msgs/sec, latency of response %d = %.2f ms" format (throughput, r, latency))
         }
-      }
+      } 
     }
   }
 

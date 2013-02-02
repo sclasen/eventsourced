@@ -152,7 +152,7 @@ case class LeveldbJournalProps(
     val key = sys.env("AWS_ACCESS_KEY_ID")
     val secret = sys.env("AWS_SECRET_ACCESS_KEY")
     val table = "eventsourced.dynamojournal.tests"
-    val app = System.currentTimeMillis().toString
+    val app = "test.app"
     val props: DynamoDBJournalProps = DynamoDBJournalProps(table, app, key, secret)
     DynamoDBJournal.createJournal(table)(props.dynamo)
     new DynamoDBJournal(props)

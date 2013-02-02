@@ -11,7 +11,7 @@ case class DynamoDBJournalProps(journalTable: String, eventsourcedApp: String, k
 
   private[journal] val clientConfig = {
     val c = new ClientConfiguration()
-    c.setMaxConnections(1)
+    c.setMaxConnections(64)
     c.setMaxErrorRetry(maxRetries)
     c.setConnectionTimeout(connectionTimeout)
     c.setSocketTimeout(socketTimeout)
