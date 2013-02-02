@@ -37,7 +37,7 @@ class StressExample  extends EventsourcingSpec[Fixture] {
         val processor = configure(reliable = false)
         extension.recover(2 minutes)
 
-        stress(processor, throttle = 4)(Timeout(100 seconds, system))
+        stress(processor, throttle = 4)(Timeout(100 seconds), system)
         queue.poll(100, TimeUnit.SECONDS) must be(cycles)
       }
     }
@@ -48,7 +48,7 @@ class StressExample  extends EventsourcingSpec[Fixture] {
         val processor = configure(reliable = true)
         extension.recover(2 minutes)
 
-        stress(processor, throttle = 7)(Timeout(100 seconds, system))
+        stress(processor, throttle = 7)(Timeout(100 seconds), system)
         queue.poll(100, TimeUnit.SECONDS) must be(cycles)
       }
     }
