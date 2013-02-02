@@ -16,18 +16,17 @@
 package org.eligosource.eventsourced.journal
 
 import java.io.File
-
+import org.eligosource.eventsourced.core._
 import scala.concurrent.duration._
 
-import org.eligosource.eventsourced.core._
 
 /**
  * Configuration object for a [[http://code.google.com/p/leveldb/ LevelDB]] based journal. This
  * journal comes with different optimizations to choose from, as described at the methods
  *
- *  - `withProcessorStructure`
- *  - `withSequenceStructure`
- *  - `withThrottledReplay`
+ * - `withProcessorStructure`
+ * - `withSequenceStructure`
+ * - `withThrottledReplay`
  *
  * Journal actors can be created from a configuration object as follows:
  *
@@ -51,25 +50,25 @@ import org.eligosource.eventsourced.core._
  * @param fsync `true` if every write is physically synced. Default is `false`.
  * @param checksum `true` if checksums are verified on read. Default is `false`.
  * @param processorStructured `true` if entries are primarily ordered by processor
- *        id, `false` if entries are ordered by sequence number.  Default is `true`.
+ *                            id, `false` if entries are ordered by sequence number.  Default is `true`.
  * @param throttleAfter `0` if replay throttling is turned off, or a positive integer
- *        to `throttleFor` after the specified number of replayed event messages.
+ *                      to `throttleFor` after the specified number of replayed event messages.
  * @param throttleFor Suspend replay for specified duration after `throttleAfter`
- *        replayed event messages.
+ *                    replayed event messages.
  */
 case class LeveldbJournalProps(
-  dir: File,
-  name: Option[String] = None,
-  dispatcherName: Option[String] = None,
-  fsync: Boolean = false,
-  checksum: Boolean = false,
-  processorStructured: Boolean = true,
-  throttleAfter: Int = 0,
-  throttleFor: FiniteDuration = 100 milliseconds) extends JournalProps {
+                                dir: File,
+                                name: Option[String] = None,
+                                dispatcherName: Option[String] = None,
+                                fsync: Boolean = false,
+                                checksum: Boolean = false,
+                                processorStructured: Boolean = true,
+                                throttleAfter: Int = 0,
+                                throttleFor: FiniteDuration = 100 milliseconds) extends JournalProps {
 
   /**
-   *  Returns `false` if entries are primarily ordered by processor id,
-   *  `true` if entries are ordered by sequence number. Default is `false`.
+   * Returns `false` if entries are primarily ordered by processor id,
+   * `true` if entries are ordered by sequence number. Default is `false`.
    */
   def sequenceStructured: Boolean =
     !processorStructured
@@ -111,13 +110,13 @@ case class LeveldbJournalProps(
    *
    * Pros:
    *
-   *  - efficient replay of input messages for all processors (batch replay)
-   *  - efficient replay of input messages for a single processor
-   *  - efficient replay of output messages
+   * - efficient replay of input messages for all processors (batch replay)
+   * - efficient replay of input messages for a single processor
+   * - efficient replay of output messages
    *
    * Cons:
    *
-   *  - deletion of old entries requires full scan
+   * - deletion of old entries requires full scan
    */
   def withProcessorStructure =
     copy(processorStructured = true)
@@ -129,13 +128,13 @@ case class LeveldbJournalProps(
    *
    * Pros:
    *
-   *  - efficient replay of input messages for all processors (batch replay with optional lower bound)
-   *  - efficient replay of output messages
-   *  - efficient deletion of old entries
+   * - efficient replay of input messages for all processors (batch replay with optional lower bound)
+   * - efficient replay of output messages
+   * - efficient deletion of old entries
    *
    * Cons:
    *
-   *  - replay of input messages for a single processor requires full scan (with optional lower bound)
+   * - replay of input messages for a single processor requires full scan (with optional lower bound)
    */
   def withSequenceStructure =
     copy(processorStructured = false)
@@ -152,7 +151,7 @@ case class LeveldbJournalProps(
     val key = sys.env("AWS_ACCESS_KEY_ID")
     val secret = sys.env("AWS_SECRET_ACCESS_KEY")
     val table = "eventsourced.dynamojournal.tests"
-    val app = "test.app"
+    val app = "test.app." + sys.env("TEST_APP")
     val props: DynamoDBJournalProps = DynamoDBJournalProps(table, app, key, secret)
     DynamoDBJournal.createJournal(table)(props.dynamo)
     new DynamoDBJournal(props)
