@@ -15,9 +15,15 @@
  */
 package org.eligosource.eventsourced.journal
 
+import akka.actor.ActorSystem
+import com.amazonaws.services.dynamodb.AmazonDynamoDB
+import com.amazonaws.services.dynamodb.model.{AttributeValue, PutItemRequest}
+import concurrent.{Await, Future}
 import java.io.File
+import java.nio.ByteBuffer
 import org.eligosource.eventsourced.core._
 import scala.concurrent.duration._
+import akka.util.Timeout
 
 
 /**
@@ -151,10 +157,47 @@ case class LeveldbJournalProps(
     val key = sys.env("AWS_ACCESS_KEY_ID")
     val secret = sys.env("AWS_SECRET_ACCESS_KEY")
     val table = "eventsourced.dynamojournal.tests"
-    val app = "test.app." + sys.env("TEST_APP")
+    val app = "test.app." + System.currentTimeMillis()
     val props: DynamoDBJournalProps = DynamoDBJournalProps(table, app, key, secret)
     DynamoDBJournal.createJournal(table)(props.dynamo)
     new DynamoDBJournal(props)
+  }
+
+  def dynamo: AmazonDynamoDB = {
+    val key = sys.env("AWS_ACCESS_KEY_ID")
+    val secret = sys.env("AWS_SECRET_ACCESS_KEY")
+    val table = "eventsourced.dynamojournal.tests"
+    val app = "test.app." + sys.env("TEST_APP")
+    val props: DynamoDBJournalProps = DynamoDBJournalProps(table, app, key, secret)
+    props.dynamo
+  }
+
+  def run {
+    val d = dynamo
+    val byts = new Array[Byte](10)
+    val start = System.currentTimeMillis()
+    implicit val system = ActorSystem("test").dispatcher
+    (1 to 100000).grouped(32).foreach {
+      group =>
+        Await.result(Future.sequence {
+          group.map {
+            i => Future {
+              val item = new java.util.HashMap[String, AttributeValue]
+              item.put("id", new AttributeValue().withS(i.toString))
+              item.put("sequence", new AttributeValue().withN(i.toString))
+              item.put("event", new AttributeValue().withB(ByteBuffer.wrap(byts)))
+              val put: PutItemRequest = new PutItemRequest().withTableName("eventsourced.dynamojournal.tests").withItem(item)
+              d.putItem(put)
+              println(s"put$i")
+              if (i % 1000 == 0) {
+                val elapsed = System.currentTimeMillis() - start
+                println(s"$i $elapsed")
+              }
+            }
+          }
+        }, 10 seconds)
+    }
+
   }
 }
 

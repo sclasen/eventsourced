@@ -30,9 +30,11 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Journal {
 
   implicit def msgFromBytes(bytes: Array[Byte]): Message = serialization.deserializeMessage(bytes)
 
+  val channelMarker = Array(1.toByte)
+
   val log = context.system.log
 
-  val counterAtt = S(props.eventsourcedApp + "COUNTER")
+  val counterAtt = S(props.eventsourcedApp + Counter)
 
   val counterKey =
     new DynamoKey()
@@ -74,15 +76,20 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Journal {
 
   def executeWriteOutMsg(cmd: WriteOutMsg) {
     log.debug("executeWriteOutMsg")
+
+    val ack = {
+      if (cmd.ackSequenceNr != SkipAck)
+        putAck(WriteAck(cmd.ackProcessorId, cmd.channelId, cmd.ackSequenceNr))
+      else
+      //write a -1 to acks so we can be assured of non-nulls on the batch get in replay
+        putAck(WriteAck(cmd.ackProcessorId, -1, cmd.ackSequenceNr))
+    }
+
     batchWrite(
       put(cmd, cmd.message.clearConfirmationSettings),
-      put(counterKey, counter) //conditional write?
+      put(counterKey, counter), //conditional write?,
+      ack
     )
-    if (cmd.ackSequenceNr != SkipAck)
-      executeWriteAck(WriteAck(cmd.ackProcessorId, cmd.channelId, cmd.ackSequenceNr))
-    //else
-    //write a -1 to acks so we can be assured of non-nulls on the batch get in replay
-    //  executeWriteAck(WriteAck(cmd.ackProcessorId, -1, cmd.ackSequenceNr))
   }
 
   def executeWriteInMsg(cmd: WriteInMsg) {
@@ -95,8 +102,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Journal {
 
 
   def executeWriteAck(cmd: WriteAck) {
-    log.debug("executeWriteAckMsg")
-    writeAck(cmd)
+    batchWrite(putAck(cmd))
   }
 
   @tailrec
@@ -132,7 +138,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Journal {
             .withRangeKeyElement(N(message.sequenceNr))
       }.asJava
 
-      val ka = new KeysAndAttributes().withAttributesToGet(Acks).withKeys(keys).withConsistentRead(true)
+      val ka = new KeysAndAttributes().withKeys(keys).withConsistentRead(true)
 
       val batch = new BatchGetItemRequest().withRequestItems(Collections.singletonMap(props.journalTable, ka))
 
@@ -141,8 +147,8 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Journal {
       messages.zipWithIndex.map {
         case (message, index) =>
           if (response.getItems.size() > index && response.getItems.get(index) != null) {
-            val acks: Buffer[Int] = response.getItems.get(index).get(Acks).getNS.asScala.map(_.toInt)
-            message.copy(acks = acks.filter(_ != -1))
+            val chAcks = response.getItems.get(index).keySet().asScala.filter(!DynamoKeys.contains(_)).map(_.toInt).toSeq
+            message.copy(acks = chAcks.filter(_ != -1))
           } else {
             message
           }
@@ -156,13 +162,6 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Journal {
     (messages, Option(res.getLastEvaluatedKey))
   }
 
-  def write(key: DynamoKey, message: Array[Byte]) {
-    val atts = new java.util.HashMap[String, AttributeValueUpdate]()
-    atts.put(Event, UB(message))
-    val req = new UpdateItemRequest().withKey(key).withTableName(props.journalTable).withAttributeUpdates(atts)
-    dynamo.updateItem(req)
-  }
-
   def put(key: DynamoKey, message: Array[Byte]): PutRequest = {
     val item = new java.util.HashMap[String, AttributeValue]
     item.put(Id, key.getHashKeyElement)
@@ -171,19 +170,32 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Journal {
     new PutRequest().withItem(item)
   }
 
-  def writeAck(cmd: WriteAck) {
-    val atts = new java.util.HashMap[String, AttributeValueUpdate]()
-    atts.put(Acks, new AttributeValueUpdate().withAction(AttributeAction.PUT).withValue(NS(cmd.channelId)))
-    val updates: UpdateItemRequest = new UpdateItemRequest().withTableName(props.journalTable).withKey(cmd).withAttributeUpdates(atts)
-    dynamo.updateItem(updates)
+  def putAck(ack: WriteAck): PutRequest = {
+    val item = new java.util.HashMap[String, AttributeValue]
+    item.put(Id, ack.getHashKeyElement)
+    item.put(Sequence, ack.getRangeKeyElement)
+    item.put(ack.channelId.toString, B(channelMarker))
+    new PutRequest().withItem(item)
   }
 
+
   def batchWrite(puts: PutRequest*) {
-    val write = new java.util.HashMap[String, java.util.List[WriteRequest]]
+    /*val write = new java.util.HashMap[String, java.util.List[WriteRequest]]
     val writes = puts.map(new WriteRequest().withPutRequest(_)).asJava
     write.put(props.journalTable, writes)
     val batch = new BatchWriteItemRequest().withRequestItems(write)
-    dynamo.batchWriteItem(batch)
+    val res: BatchWriteItemResult = dynamo.batchWriteItem(batch)
+    res.getUnprocessedItems.asScala.foreach {
+      case (t, u) =>
+        log.error("UNPROCESSED!")
+        u.asScala.foreach {
+          w => log.error(w.toString)
+        }
+    }*/
+    puts.foreach {
+      p => dynamo.putItem(new PutItemRequest().withTableName(props.journalTable).withItem(p.getItem))
+    }
+
   }
 
 
@@ -253,8 +265,8 @@ object DynamoDBJournal {
   val Id = "id"
   val Sequence = "sequence"
   val Event = "event"
-  val Counter = "counter"
-  val Acks = "acks"
+  val Counter = "COUNTER"
+  val DynamoKeys = Set(Id, Sequence)
 
   val hashKey = new KeySchemaElement().withAttributeName("id").withAttributeType("S")
   val rangeKey = new KeySchemaElement().withAttributeName("sequence").withAttributeType("N")
