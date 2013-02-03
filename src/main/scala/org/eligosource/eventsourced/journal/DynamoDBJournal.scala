@@ -180,7 +180,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Journal {
 
 
   def batchWrite(puts: PutRequest*) {
-    /*val write = new java.util.HashMap[String, java.util.List[WriteRequest]]
+    val write = new java.util.HashMap[String, java.util.List[WriteRequest]]
     val writes = puts.map(new WriteRequest().withPutRequest(_)).asJava
     write.put(props.journalTable, writes)
     val batch = new BatchWriteItemRequest().withRequestItems(write)
@@ -190,12 +190,9 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Journal {
         log.error("UNPROCESSED!")
         u.asScala.foreach {
           w => log.error(w.toString)
+          dynamo.putItem(new PutItemRequest().withTableName(props.journalTable).withItem(w.getPutRequest.getItem))
         }
-    }*/
-    puts.foreach {
-      p => dynamo.putItem(new PutItemRequest().withTableName(props.journalTable).withItem(p.getItem))
     }
-
   }
 
 
