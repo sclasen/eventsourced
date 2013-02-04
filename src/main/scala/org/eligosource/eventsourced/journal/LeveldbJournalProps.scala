@@ -23,7 +23,6 @@ import java.io.File
 import java.nio.ByteBuffer
 import org.eligosource.eventsourced.core._
 import scala.concurrent.duration._
-import akka.util.Timeout
 
 
 /**
@@ -172,12 +171,12 @@ case class LeveldbJournalProps(
     props.dynamo
   }
 
-  def run {
+  def parallel {
     val d = dynamo
-    val byts = new Array[Byte](10)
+    val byts = new Array[Byte](1000)
     val start = System.currentTimeMillis()
     implicit val system = ActorSystem("test").dispatcher
-    (1 to 100000).grouped(32).foreach {
+    (start to (start + 100000)).grouped(sys.env.get("CONCURRENCY").map(_.toInt).getOrElse(64)).foreach {
       group =>
         Await.result(Future.sequence {
           group.map {
@@ -197,7 +196,26 @@ case class LeveldbJournalProps(
           }
         }, 10 seconds)
     }
+  }
 
+  def single {
+    val d = dynamo
+    val byts = new Array[Byte](1000)
+    val start = System.currentTimeMillis()
+    (start to (start + 100000)).foreach {
+      i =>
+        val item = new java.util.HashMap[String, AttributeValue]
+        item.put("id", new AttributeValue().withS(i.toString))
+        item.put("sequence", new AttributeValue().withN(i.toString))
+        item.put("event", new AttributeValue().withB(ByteBuffer.wrap(byts)))
+        val put: PutItemRequest = new PutItemRequest().withTableName("eventsourced.dynamojournal.tests").withItem(item)
+        d.putItem(put)
+        println(s"put$i")
+        if (i % 1000 == 0) {
+          val elapsed = System.currentTimeMillis() - start
+          println(s"$i $elapsed")
+        }
+    }
   }
 }
 
