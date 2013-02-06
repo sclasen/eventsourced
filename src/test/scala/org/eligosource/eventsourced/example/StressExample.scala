@@ -31,14 +31,14 @@ import concurrent.duration._
 class StressExample  extends EventsourcingSpec[Fixture] {
   "An event-sourced application" when {
     "using default channels" should {
-      "be able to deal with reasonable load" ignore { fixture =>
+      "be able to deal with reasonable load" in { fixture =>
         import fixture._
 
         val processor = configure(reliable = false)
         println("recovering default")
         extension.recover(2 minutes)
         println("stress default")
-        stress(processor, throttle = 4)(Timeout(200 seconds), system)
+        stress(processor, throttle = 400)(Timeout(200 seconds), system)
         queue.poll(200, TimeUnit.SECONDS) must be(cycles)
       }
     }
@@ -50,7 +50,7 @@ class StressExample  extends EventsourcingSpec[Fixture] {
         println("recovering reliable")
         extension.recover(2 minutes)
         println("stress reliable")
-        stress(processor, throttle = 7)(Timeout(100 seconds), system)
+        stress(processor, throttle = 700)(Timeout(100 seconds), system)
         queue.poll(100, TimeUnit.SECONDS) must be(cycles)
       }
     }
@@ -58,7 +58,8 @@ class StressExample  extends EventsourcingSpec[Fixture] {
 }
 
 object StressExample {
-  val cycles = 20000
+  val cycles = 10000
+
 
   class Fixture  extends EventsourcingFixture[Any] {
     val destination = system.actorOf(Props(new Destination(queue) with Receiver with Confirm))

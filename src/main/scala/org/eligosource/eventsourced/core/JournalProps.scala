@@ -15,6 +15,8 @@
  */
 package org.eligosource.eventsourced.core
 
+import akka.actor.Actor
+
 /**
  * Journal actor configuration object.
  */
@@ -32,5 +34,5 @@ trait JournalProps {
   /**
    * Creates a [[org.eligosource.eventsourced.core.Journal]] actor instance.
    */
-  def journal: Journal
+  def journal: Actor
 }

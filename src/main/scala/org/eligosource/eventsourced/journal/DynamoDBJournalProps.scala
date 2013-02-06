@@ -6,12 +6,12 @@ import com.amazonaws.services.dynamodb.{AmazonDynamoDBClient, AmazonDynamoDB}
 import org.eligosource.eventsourced.core.{Journal, JournalProps}
 
 
-case class DynamoDBJournalProps(journalTable: String, eventsourcedApp: String, key: String, secret: String, maxRetries: Int = 3, connectionTimeout: Int = 10000, socketTimeout: Int = 10000) extends JournalProps {
+case class DynamoDBJournalProps(journalTable: String, eventsourcedApp: String, key: String, secret: String, maxRetries: Int = 3, connectionTimeout: Int = 10000, socketTimeout: Int = 10000, asyncWriterCount:Int=12) extends JournalProps {
 
 
   private[journal] val clientConfig = {
     val c = new ClientConfiguration()
-    c.setMaxConnections(16)
+    c.setMaxConnections(asyncWriterCount)
     c.setMaxErrorRetry(maxRetries)
     c.setConnectionTimeout(connectionTimeout)
     c.setSocketTimeout(socketTimeout)
@@ -33,5 +33,5 @@ case class DynamoDBJournalProps(journalTable: String, eventsourcedApp: String, k
   /**
    * Creates a [[org.eligosource.eventsourced.core.Journal]] actor instance.
    */
-  def journal: Journal = new DynamoDBJournal(this)
+  def journal = new DynamoDBJournal(this)
 }

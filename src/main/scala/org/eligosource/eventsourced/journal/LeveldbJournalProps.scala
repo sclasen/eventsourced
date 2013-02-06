@@ -152,7 +152,7 @@ case class LeveldbJournalProps(
   def withThrottledReplay(throttleAfter: Int, throttleFor: FiniteDuration = 100 milliseconds) =
     copy(throttleAfter = throttleAfter, throttleFor = throttleFor)
 
-  def journal: Journal = {
+  def journal = {
     val key = sys.env("AWS_ACCESS_KEY_ID")
     val secret = sys.env("AWS_SECRET_ACCESS_KEY")
     val table = "eventsourced.dynamojournal.tests"
