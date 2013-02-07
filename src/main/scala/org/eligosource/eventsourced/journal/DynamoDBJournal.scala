@@ -332,7 +332,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
       asyncResequence(SnapshottedReplay(cmd, counter))
     }
     case cmd: BatchDeliverOutMsgs => {
-      asyncResequence(SnapshottedReplay(cmd, counter))
+      asyncResequence(cmd)
     }
     case cmd: SetCommandListener => {
       resequencer ! cmd
