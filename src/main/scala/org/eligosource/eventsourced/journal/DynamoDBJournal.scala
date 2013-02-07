@@ -1,7 +1,7 @@
 package org.eligosource.eventsourced.journal
 
 import DynamoDBJournal._
-import akka.actor.{Props, Actor, ActorRef}
+import akka.actor.{Status, Props, Actor, ActorRef}
 import akka.pattern._
 import akka.util._
 import collection.JavaConverters._
@@ -80,7 +80,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
   }
 
 
-  private def replayOut(r: ReplayOutMsgs, replayTo:Long, p: (Message) => Unit) {
+  private def replayOut(r: ReplayOutMsgs, replayTo: Long, p: (Message) => Unit) {
     val from = r.fromSequenceNr
     val msgs = (replayTo - r.fromSequenceNr).toInt + 1
     log.debug(s"replayingOut from ${from} for up to ${msgs}")
@@ -90,11 +90,19 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
         log.debug("replayingOut")
         val ka = new KeysAndAttributes().withKeys(keys.asJava).withConsistentRead(true)
         val resp = dynamo.batchGetItem(new BatchGetItemRequest().withRequestItems(Collections.singletonMap(props.journalTable, ka)))
-        resp.getResponses.get(props.journalTable).getItems.asScala.map(m => m.get(Data).getB).map(b => msgFromBytes(b.array())).foreach(p)
+        val batchMap = mapBatch(resp.getResponses.get(props.journalTable))
+
+        keys.foreach {
+          key =>
+            Option(batchMap.get(key.getHashKeyElement)).foreach {
+              item =>
+                p(msgFromBytes(item.get(Data).getB.array()))
+            }
+        }
     }
   }
 
-  private def replayIn(r: ReplayInMsgs, replayTo:Long, processorId: Int, p: (Message) => Unit) {
+  private def replayIn(r: ReplayInMsgs, replayTo: Long, processorId: Int, p: (Message) => Unit) {
     val from = r.fromSequenceNr
     val msgs = (replayTo - r.fromSequenceNr).toInt + 1
     log.debug(s"replayingIn from ${from} for up to ${msgs}")
@@ -105,38 +113,54 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
         keys.foreach(k => log.debug(k.toString))
         val ka = new KeysAndAttributes().withKeys(keys.asJava).withConsistentRead(true)
         val resp = dynamo.batchGetItem(new BatchGetItemRequest().withRequestItems(Collections.singletonMap(props.journalTable, ka)))
-        val messages = resp.getResponses.get(props.journalTable).getItems.asScala.map(m => m.get(Data).getB).map(b => msgFromBytes(b.array()))
+        val batchMap = mapBatch(resp.getResponses.get(props.journalTable))
+        val messages = keys.map {
+          key =>
+            Option(batchMap.get(key.getHashKeyElement)).map {
+              item =>
+                msgFromBytes(item.get(Data).getB.array())
+            }
+        }.flatten
         log.debug(s"found ${messages.size}")
         confirmingChannels(processorId, messages).foreach(p)
     }
-    //TODO need to understand what happens in the batchget when a key is not found esp in confirming channels zipWithIndex
   }
 
-  def confirmingChannels(processorId: Int, messages: Buffer[Message]): Buffer[Message] = {
+  def confirmingChannels(processorId: Int, messages: Stream[Message]): Stream[Message] = {
     if (messages.isEmpty) messages
     else {
       val keys = messages.map {
         message =>
           new DynamoKey()
             .withHashKeyElement(ackKey(processorId, message.sequenceNr))
-      }.asJava
+      }
 
-      val ka = new KeysAndAttributes().withKeys(keys).withConsistentRead(true)
-
+      val ka = new KeysAndAttributes().withKeys(keys.asJava).withConsistentRead(true)
       val batch = new BatchGetItemRequest().withRequestItems(Collections.singletonMap(props.journalTable, ka))
-
       val response = dynamo.batchGetItem(batch).getResponses.get(props.journalTable)
-      log.debug(s"found ${response.getItems.size()} confirming channels")
-      messages.zipWithIndex.map {
-        case (message, index) =>
-          if (response.getItems.size() > index && response.getItems.get(index) != null) {
-            val chAcks = response.getItems.get(index).keySet().asScala.filter(!DynamoKeys.contains(_)).map(_.toInt).toSeq
-            message.copy(acks = chAcks.filter(_ != -1))
-          } else {
-            message
+      val batchMap = mapBatch(response)
+
+      val acks = keys.map {
+        key =>
+          Option(batchMap.get(key.getHashKeyElement)).map {
+            _.keySet().asScala.filter(!DynamoKeys.contains(_)).map(_.toInt).toSeq
           }
       }
+
+      messages.zip(acks).map {
+        case (message, Some(chAcks)) => message.copy(acks = chAcks.filter(_ != -1))
+        case (message, None) => message
+      }
+
     }
+  }
+
+  def mapBatch(b: BatchResponse) = {
+    val map = new java.util.HashMap[AttributeValue, java.util.Map[String, AttributeValue]]
+    b.getItems.iterator().asScala.foreach {
+      item => map.put(item.get(Id), item)
+    }
+    map
   }
 
   def queryAll(q: QueryRequest): (Buffer[Message], Option[DynamoKey]) = {
@@ -256,7 +280,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
       case _ => resequencer tell((ctr, cmd), sdr)
     }
     write onFailure {
-      case _ => /* TODO: handle error */
+      case t => resequencer tell((ctr, WriteFailed(cmd, t)), sdr)
     }
     _counterResequencer += 1L
   }
@@ -267,6 +291,8 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
   }
 
   case class SnapshottedReplay(replayCmd: Any, toSequencerNr: Long)
+
+  case class WriteFailed(cmd: Any, cause: Throwable)
 
   def receive = {
     case cmd: WriteInMsg => {
@@ -336,6 +362,10 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
         executeDeleteOutMsg(cmd)
         sender !()
       }
+    }
+
+    override def preRestart(reason: Throwable, message: Option[Any]) {
+      sender ! Status.Failure(reason)
     }
 
     def executeDeleteOutMsg(cmd: DeleteOutMsg) {
@@ -418,7 +448,11 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
         channels.foreach(_ ! Deliver)
         sdr ! DeliveryDone
       }
+      case e: WriteFailed => {
+        context.system.eventStream.publish(e)
+      }
     }
+
 
     def executeBatchReplayInMsgs(cmds: Seq[ReplayInMsgs], replayTo: Long, p: (Message, ActorRef) => Unit, sender: ActorRef) {
       cmds.foreach(cmd => replayIn(cmd, replayTo, cmd.processorId, p(_, cmd.target)))
