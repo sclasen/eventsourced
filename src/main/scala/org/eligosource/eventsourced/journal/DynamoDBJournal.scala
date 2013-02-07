@@ -80,9 +80,9 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
   }
 
 
-  private def replayOut(r: ReplayOutMsgs, p: (Message) => Unit) {
+  private def replayOut(r: ReplayOutMsgs, replayTo:Long, p: (Message) => Unit) {
     val from = r.fromSequenceNr
-    val msgs = (storedCounter - r.fromSequenceNr).toInt + 1
+    val msgs = (replayTo - r.fromSequenceNr).toInt + 1
     log.debug(s"replayingOut from ${from} for up to ${msgs}")
     Stream.iterate(r.fromSequenceNr, msgs)(_ + 1)
       .map(l => new DynamoKey().withHashKeyElement(outKey(r.channelId, l))).grouped(100).foreach {
@@ -94,9 +94,9 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
     }
   }
 
-  private def replayIn(r: ReplayInMsgs, processorId: Int, p: (Message) => Unit) {
+  private def replayIn(r: ReplayInMsgs, replayTo:Long, processorId: Int, p: (Message) => Unit) {
     val from = r.fromSequenceNr
-    val msgs = (storedCounter - r.fromSequenceNr).toInt + 1
+    val msgs = (replayTo - r.fromSequenceNr).toInt + 1
     log.debug(s"replayingIn from ${from} for up to ${msgs}")
     Stream.iterate(r.fromSequenceNr, msgs)(_ + 1)
       .map(l => new DynamoKey().withHashKeyElement(inKey(r.processorId, l))).grouped(100).foreach {
@@ -188,7 +188,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
 
   def UB(value: Array[Byte]): AttributeValueUpdate = new AttributeValueUpdate().withAction(AttributeAction.PUT).withValue(B(value))
 
-  def inKey(procesorId: Int, sequence: Long) = S(str(props.eventsourcedApp, "IN-", procesorId, "-", sequence))   //dont remove those dashes or else keys will be funky
+  def inKey(procesorId: Int, sequence: Long) = S(str(props.eventsourcedApp, "IN-", procesorId, "-", sequence)) //dont remove those dashes or else keys will be funky
 
   def outKey(channelId: Int, sequence: Long) = S(str(props.eventsourcedApp, "OUT-", channelId, "-", sequence))
 
@@ -266,6 +266,8 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
     _counterResequencer += 1L
   }
 
+  case class SnapshottedReplay(replayCmd: Any, toSequencerNr: Long)
+
   def receive = {
     case cmd: WriteInMsg => {
       val c = if (cmd.genSequenceNr) cmd.withSequenceNr(counter)
@@ -295,16 +297,16 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
       asyncResequence(cmd)
     }
     case cmd: BatchReplayInMsgs => {
-      asyncResequence(cmd)
+      asyncResequence(SnapshottedReplay(cmd, counter))
     }
     case cmd: ReplayInMsgs => {
-      asyncResequence(cmd)
+      asyncResequence(SnapshottedReplay(cmd, counter))
     }
     case cmd: ReplayOutMsgs => {
-      asyncResequence(cmd)
+      asyncResequence(SnapshottedReplay(cmd, counter))
     }
     case cmd: BatchDeliverOutMsgs => {
-      asyncResequence(cmd)
+      asyncResequence(SnapshottedReplay(cmd, counter))
     }
     case cmd: SetCommandListener => {
       resequencer ! cmd
@@ -403,14 +405,14 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
       case Loop(msg, target) => {
         target tell(Looped(msg), sdr)
       }
-      case BatchReplayInMsgs(replays) => {
-        executeBatchReplayInMsgs(replays, (msg, target) => target tell(Written(msg), deadLetters), sdr)
+      case SnapshottedReplay(BatchReplayInMsgs(replays), toSeq) => {
+        executeBatchReplayInMsgs(replays, toSeq, (msg, target) => target tell(Written(msg), deadLetters), sdr)
       }
-      case cmd: ReplayInMsgs => {
-        executeReplayInMsgs(cmd, msg => cmd.target tell(Written(msg), deadLetters), sdr)
+      case SnapshottedReplay(cmd: ReplayInMsgs, toSeq) => {
+        executeReplayInMsgs(cmd, toSeq, msg => cmd.target tell(Written(msg), deadLetters), sdr)
       }
-      case cmd: ReplayOutMsgs => {
-        executeReplayOutMsgs(cmd, msg => cmd.target tell(Written(msg), deadLetters), sdr)
+      case SnapshottedReplay(cmd: ReplayOutMsgs, toSeq) => {
+        executeReplayOutMsgs(cmd, toSeq, msg => cmd.target tell(Written(msg), deadLetters), sdr)
       }
       case BatchDeliverOutMsgs(channels) => {
         channels.foreach(_ ! Deliver)
@@ -418,18 +420,18 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
       }
     }
 
-    def executeBatchReplayInMsgs(cmds: Seq[ReplayInMsgs], p: (Message, ActorRef) => Unit, sender: ActorRef) {
-      cmds.foreach(cmd => replayIn(cmd, cmd.processorId, p(_, cmd.target)))
+    def executeBatchReplayInMsgs(cmds: Seq[ReplayInMsgs], replayTo: Long, p: (Message, ActorRef) => Unit, sender: ActorRef) {
+      cmds.foreach(cmd => replayIn(cmd, replayTo, cmd.processorId, p(_, cmd.target)))
       sender ! ReplayDone
     }
 
-    def executeReplayInMsgs(cmd: ReplayInMsgs, p: (Message) => Unit, sender: ActorRef) {
-      replayIn(cmd, cmd.processorId, p)
+    def executeReplayInMsgs(cmd: ReplayInMsgs, replayTo: Long, p: (Message) => Unit, sender: ActorRef) {
+      replayIn(cmd, replayTo, cmd.processorId, p)
       sender ! ReplayDone
     }
 
-    def executeReplayOutMsgs(cmd: ReplayOutMsgs, p: (Message) => Unit, sender: ActorRef) {
-      replayOut(cmd, p)
+    def executeReplayOutMsgs(cmd: ReplayOutMsgs, replayTo: Long, p: (Message) => Unit, sender: ActorRef) {
+      replayOut(cmd, replayTo, p)
       //sender ! ReplayDone needed???
     }
 
