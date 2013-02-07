@@ -18,7 +18,7 @@ case class DynamoDBJournalProps(journalTable: String, eventsourcedApp: String, k
     c
   }
 
-  private[journal] lazy val dynamo: AmazonDynamoDB = new AmazonDynamoDBClient(new BasicAWSCredentials(key, secret), clientConfig)
+  lazy val dynamo: AmazonDynamoDB = new AmazonDynamoDBClient(new BasicAWSCredentials(key, secret), clientConfig)
 
   /**
    * Optional channel name.

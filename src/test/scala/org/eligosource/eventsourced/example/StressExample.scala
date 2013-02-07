@@ -31,26 +31,26 @@ import concurrent.duration._
 class StressExample  extends EventsourcingSpec[Fixture] {
   "An event-sourced application" when {
     "using default channels" should {
-      "be able to deal with reasonable load" in { fixture =>
+      "be able to deal with reasonable load" ignore { fixture =>
         import fixture._
 
         val processor = configure(reliable = false)
         println("recovering default")
         extension.recover(2 minutes)
         println("stress default")
-        stress(processor, throttle = 400)(Timeout(200 seconds), system)
-        queue.poll(200, TimeUnit.SECONDS) must be(cycles)
+        stress(processor, throttle = 4)(Timeout(100 seconds), system)
+        queue.poll(100, TimeUnit.SECONDS) must be(cycles)
       }
     }
     "using reliable channels" should {
-      "be able to deal with reasonable load" ignore { fixture =>
+      "be able to deal with reasonable load" in { fixture =>
         import fixture._
 
         val processor = configure(reliable = true)
         println("recovering reliable")
         extension.recover(2 minutes)
         println("stress reliable")
-        stress(processor, throttle = 700)(Timeout(100 seconds), system)
+        stress(processor, throttle = 7)(Timeout(100 seconds), system)
         queue.poll(100, TimeUnit.SECONDS) must be(cycles)
       }
     }
@@ -78,10 +78,10 @@ object StressExample {
 
     val start = System.nanoTime()
     1 to cycles foreach { i =>
-      if (i % 100 == 0) Thread.sleep(throttle)
+      if (i % 1 == 100) Thread.sleep(throttle)
       val nanos = System.nanoTime()
       processor ? Message(i) onSuccess {
-        case r: Int => if (r % 5000 == 0) {
+        case r: Int => if (r % 100 == 0) {
           val now = System.nanoTime()
 
           val latency = (now - nanos) / 1e6

@@ -155,10 +155,10 @@ case class LeveldbJournalProps(
   def journal = {
     val key = sys.env("AWS_ACCESS_KEY_ID")
     val secret = sys.env("AWS_SECRET_ACCESS_KEY")
-    val table = "eventsourced.dynamojournal.tests"
+    val table = "eventsourced.dynamodbjournal2.tests"
     val app = "test.app." + System.currentTimeMillis()
     val props: DynamoDBJournalProps = DynamoDBJournalProps(table, app, key, secret)
-    DynamoDBJournal.createJournal(table)(props.dynamo)
+    //DynamoDBJournal.createJournal(table)(props.dynamo)
     new DynamoDBJournal(props)
   }
 
@@ -208,7 +208,7 @@ case class LeveldbJournalProps(
         item.put("id", new AttributeValue().withS(i.toString))
         item.put("sequence", new AttributeValue().withN(i.toString))
         item.put("event", new AttributeValue().withB(ByteBuffer.wrap(byts)))
-        val put: PutItemRequest = new PutItemRequest().withTableName("eventsourced.dynamojournal.tests").withItem(item)
+        val put: PutItemRequest = new PutItemRequest().withTableName("eventsourced.dynamojournal2.tests").withItem(item)
         d.putItem(put)
         println(s"put$i")
         if (i % 1000 == 0) {
