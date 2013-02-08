@@ -6,7 +6,7 @@ import com.amazonaws.services.dynamodb.{AmazonDynamoDBClient, AmazonDynamoDB}
 import org.eligosource.eventsourced.core.{Journal, JournalProps}
 
 
-case class DynamoDBJournalProps(journalTable: String, eventsourcedApp: String, key: String, secret: String, maxRetries: Int = 3, connectionTimeout: Int = 10000, socketTimeout: Int = 10000, asyncWriterCount:Int=12) extends JournalProps {
+case class DynamoDBJournalProps(journalTable: String, eventsourcedApp: String, key: String, secret: String, maxRetries: Int = 3, connectionTimeout: Int = 10000, socketTimeout: Int = 10000, asyncWriterCount:Int=16) extends JournalProps {
 
 
   private[journal] val clientConfig = {

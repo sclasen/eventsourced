@@ -4,16 +4,18 @@ import DynamoDBJournal._
 import akka.actor.{Status, Props, Actor, ActorRef}
 import akka.pattern._
 import akka.util._
+import annotation.tailrec
 import collection.JavaConverters._
+import collection.SortedMap
 import collection.immutable.IndexedSeq
+import collection.immutable.TreeMap
 import collection.mutable.Buffer
-import com.amazonaws.AmazonServiceException
 import com.amazonaws.services.dynamodb.AmazonDynamoDB
 import com.amazonaws.services.dynamodb.model._
 import com.amazonaws.services.dynamodb.model.{Key => DynamoKey}
 import java.nio.ByteBuffer
-import java.util
 import java.util.Collections
+import java.util.{List => JList, Map => JMap, HashMap => JHMap}
 import org.eligosource.eventsourced.core.Channel.Deliver
 import org.eligosource.eventsourced.core.Journal._
 import org.eligosource.eventsourced.core.{Serialization, Message}
@@ -22,11 +24,9 @@ import scala.concurrent.duration._
 /**
  * Current status:
  *
- * Needs more error resilience.
  *
  * Needs a strategy for storing Messages with size > 64k.
  *
- * Could batch up some writes.
  */
 class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
 
@@ -43,11 +43,11 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
   val log = context.system.log
   log.debug("new Journal")
 
-  def counterAtt(shard: Int) = S(props.eventsourcedApp + Counter + shard)
+  def counterAtt(cntr: Long) = S(props.eventsourcedApp + Counter + cntr)
 
-  def counterKey(shard: Int) =
+  def counterKey(cntr: Long) =
     new DynamoKey()
-      .withHashKeyElement(counterAtt(shard))
+      .withHashKeyElement(counterAtt(cntr))
 
   implicit val dynamo: AmazonDynamoDB = props.dynamo
 
@@ -57,28 +57,47 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
 
 
   protected def storedCounter: Long = {
-    val c = (1 to 100).map(counterKey).grouped(25).map {
-      counterKeys =>
-        val ka = new KeysAndAttributes().withKeys(counterKeys: _*).withConsistentRead(true)
-        val tables = Collections.singletonMap(props.journalTable, ka)
-        val items: util.List[util.Map[String, AttributeValue]] = try {
-          val res = dynamo.batchGetItem(new BatchGetItemRequest().withRequestItems(tables))
-          val batch = res.getResponses.get(props.journalTable)
-          batch.getItems
-        }
-        catch {
-          case v: AmazonServiceException if v.getErrorCode == "ValidationException" =>
-            log.error(v, "Returning empty list for stored counter, new table with no counter keys?")
-            Collections.emptyList()
-        }
-
-        val counters: Buffer[Long] = items.asScala.map(_.get(Data)).map(a => counterFromBytes(a.getB.array()))
-        counters.foldLeft(0L)(math.max(_, _))
-    }.foldLeft(0L)(math.max(_, _))
-    log.debug(s"stored counter $c ${props.journalTable}, ${props.eventsourcedApp}")
-    c
+    val start = Long.MaxValue
+    findStoredCounter(start)
   }
 
+  @tailrec
+  private def findStoredCounter(max: Long): Long = {
+    val candidates = candidateKeys(max)
+    val ka = new KeysAndAttributes().withKeys(candidates.values.toSeq: _*).withConsistentRead(true)
+    val tables = Collections.singletonMap(props.journalTable, ka)
+    val res = dynamo.batchGetItem(new BatchGetItemRequest().withRequestItems(tables))
+    val batch = mapBatch(res.getResponses.get(props.journalTable))
+    val counters: List[Long] = candidates.map {       ///find the counters associated with any found keys
+      case (cnt, key) => Option(batch.get(key.getHashKeyElement)).map(_ => cnt)
+    }.flatten.toList
+
+    if (counters.size == 0) 0 //no counters found
+    else if (counters.size == 1 && counters(0) == 1) 1 //one counter found
+    else if (endsSequentially(counters)) counters.last // last 2 counters found are sequential so last one is highest
+    else findStoredCounter(counters.last)
+
+
+  }
+
+  def endsSequentially(counters: List[Long]): Boolean = {
+    val two = counters.takeRight(2)
+    two match {
+      case a :: b :: Nil if a + 1 == b => true
+      case _ => false
+    }
+  }
+
+
+  def candidateKeys(max: Long): TreeMap[Long, DynamoKey] = {
+    val increment: Long = max / 100
+    (Stream.iterate(1L, 100)(i => i + increment)).map {
+      i =>
+        i -> counterKey(i)
+    }.foldLeft(TreeMap.empty[Long,DynamoKey]){
+      case (tm, (cnt, key)) => tm + (cnt -> key)
+    }
+  }
 
   private def replayOut(r: ReplayOutMsgs, replayTo: Long, p: (Message) => Unit) {
     val from = r.fromSequenceNr
@@ -156,7 +175,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
   }
 
   def mapBatch(b: BatchResponse) = {
-    val map = new java.util.HashMap[AttributeValue, java.util.Map[String, AttributeValue]]
+    val map = new JHMap[AttributeValue, JMap[String, AttributeValue]]
     b.getItems.iterator().asScala.foreach {
       item => map.put(item.get(Id), item)
     }
@@ -170,7 +189,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
   }
 
   def put(key: DynamoKey, message: Array[Byte]): PutRequest = {
-    val item = new java.util.HashMap[String, AttributeValue]
+    val item = new JHMap[String, AttributeValue]
     log.debug(s"put:  ${key.toString}")
     item.put(Id, key.getHashKeyElement)
     item.put(Data, B(message))
@@ -178,7 +197,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
   }
 
   def putAck(ack: WriteAck): PutRequest = {
-    val item = new java.util.HashMap[String, AttributeValue]
+    val item = new JHMap[String, AttributeValue]
     item.put(Id, ack.getHashKeyElement)
     item.put(ack.channelId.toString, B(channelMarker))
     new PutRequest().withItem(item)
@@ -187,7 +206,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
 
   def batchWrite(puts: PutRequest*) {
     log.debug("batchWrite")
-    val write = new java.util.HashMap[String, java.util.List[WriteRequest]]
+    val write = new JHMap[String, JList[WriteRequest]]
     val writes = puts.map(new WriteRequest().withPutRequest(_)).asJava
     write.put(props.journalTable, writes)
     val batch = new BatchWriteItemRequest().withRequestItems(write)
@@ -259,7 +278,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
   val resequencer: ActorRef = context.actorOf(Props(new Resequencer))
 
   val w: IndexedSeq[ActorRef] = (1 to props.asyncWriterCount).map {
-    i => context.actorOf(Props(new Writer(i)))
+    i => context.actorOf(Props(new Writer))
   }
 
   val writers: Vector[ActorRef] = Vector(w: _*)
@@ -344,7 +363,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
     log.debug("prestart" + _counter)
   }
 
-  class Writer(counterShard: Int) extends Actor {
+  class Writer extends Actor {
     def receive = {
       case (nr, cmd: WriteInMsg) => {
         executeWriteInMsg(cmd)
@@ -385,7 +404,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
       log.debug(s"batch out with counter ${cmd.message.sequenceNr}")
       batchWrite(
         put(cmd, cmd.message.clearConfirmationSettings),
-        put(counterKey(counterShard), cmd.message.sequenceNr),
+        put(counterKey(cmd.message.sequenceNr), countMarker),
         ack
       )
     }
@@ -394,7 +413,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
       log.debug(s"batch in with counter ${cmd.message.sequenceNr}")
       batchWrite(
         put(cmd, cmd.message.clearConfirmationSettings),
-        put(counterKey(counterShard), cmd.message.sequenceNr)
+        put(counterKey(cmd.message.sequenceNr), countMarker)
       )
     }
 
