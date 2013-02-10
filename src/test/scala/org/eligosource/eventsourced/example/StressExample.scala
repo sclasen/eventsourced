@@ -27,18 +27,20 @@ import org.eligosource.eventsourced.example.StressExample._
 import org.eligosource.eventsourced.core.Message
 import org.eligosource.eventsourced.core.ReliableChannelProps
 import concurrent.duration._
+import concurrent.{Await, Future}
+import com.yammer.metrics.reporting.ConsoleReporter
 
 class StressExample  extends EventsourcingSpec[Fixture] {
+
   "An event-sourced application" when {
     "using default channels" should {
-      "be able to deal with reasonable load" ignore { fixture =>
+      "be able to deal with reasonable load" in { fixture =>
         import fixture._
-
         val processor = configure(reliable = false)
         println("recovering default")
         extension.recover(2 minutes)
         println("stress default")
-        stress(processor, throttle = 4)(Timeout(100 seconds), system)
+        stress(processor, throttle = 10)(Timeout(100 seconds), system)
         queue.poll(100, TimeUnit.SECONDS) must be(cycles)
       }
     }
@@ -50,7 +52,7 @@ class StressExample  extends EventsourcingSpec[Fixture] {
         println("recovering reliable")
         extension.recover(2 minutes)
         println("stress reliable")
-        stress(processor, throttle = 7)(Timeout(100 seconds), system)
+        stress(processor, throttle = 10)(Timeout(100 seconds), system)
         queue.poll(100, TimeUnit.SECONDS) must be(cycles)
       }
     }
@@ -58,7 +60,7 @@ class StressExample  extends EventsourcingSpec[Fixture] {
 }
 
 object StressExample {
-  val cycles = 10000
+  val cycles = 1000
 
 
   class Fixture  extends EventsourcingFixture[Any] {
@@ -75,10 +77,10 @@ object StressExample {
 
   def stress(processor: ActorRef, throttle: Long)(implicit timeout: Timeout, system: ActorSystem) {
     import system.dispatcher
-
+    Await.ready(Future.sequence(1 to 100 map {i =>processor ? Message(i)}),20 seconds)
     val start = System.nanoTime()
     1 to cycles foreach { i =>
-      if (i % 1 == 100) Thread.sleep(throttle)
+      Thread.sleep(throttle)
       val nanos = System.nanoTime()
       processor ? Message(i) onSuccess {
         case r: Int => if (r % 100 == 0) {

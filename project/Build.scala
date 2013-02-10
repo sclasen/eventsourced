@@ -15,7 +15,7 @@ object Settings {
   import Resolvers._
 
   val defaultSettings = buildSettings ++ Seq(
-    resolvers ++= Seq(journalioRepo),
+    resolvers ++= Seq(journalioRepo, sprayRepo),
     scalacOptions in Compile ++= Seq("-target:jvm-1.6", "-unchecked"),
     javacOptions in Compile ++= Seq("-source", "1.6", "-target", "1.6"),
     parallelExecution in Test := false
@@ -23,13 +23,14 @@ object Settings {
 }
 
 object Resolvers {
+  val sprayRepo =  "spray repo" at "http://repo.spray.io"
   val journalioRepo = "Journalio Repo" at "http://repo.eligotech.com/nexus/content/repositories/eligosource-releases"
 }
 
 object Dependencies {
   import Dependency._
 
-  val core = Seq(akkaActor, akkaCluster, commonsIo, journalIo, levelDbJni, protobuf, scalaTest, scalaActors, aws)
+  val core = Seq(akkaActor, akkaCluster, commonsIo, journalIo, levelDbJni, protobuf, scalaTest, scalaActors, aws, spray, metrics,akkaTestkit)
 }
 
 object Version {
@@ -50,11 +51,15 @@ object Dependency {
   val journalIo   = "journalio"                 %  "journalio"      % "1.2"    % "compile"
   val levelDbJni  = "org.fusesource.leveldbjni" %  "leveldbjni-all" % "1.4.1"  % "compile"
   val aws         = "com.amazonaws"             % "aws-java-sdk"    % "1.3.30" % "compile"
+  val spray       = "io.spray"                  %   "spray-client"  % "1.1-M7" % "compile"
+  val metrics     = "com.yammer.metrics"        %  "metrics-core"   % "2.2.0"  % "compile"
+
 
   // -----------------------------------------------
   //  Test
   // -----------------------------------------------
 
+  val akkaTestkit = "com.typesafe.akka" %% "akka-testkit" % Akka
   val akkaCluster = "com.typesafe.akka" %% "akka-cluster-experimental" % Akka    % "test"
   val scalaActors = "org.scala-lang"    %  "scala-actors"              % Scala   % "test"
   val scalaTest   = "org.scalatest"     %% "scalatest"                 % "1.9.1" % "test"

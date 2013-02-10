@@ -1,25 +1,41 @@
 package org.eligosource.eventsourced.journal
 
 import DynamoDBJournal._
-import akka.actor.{Status, Props, Actor, ActorRef}
+import akka.actor._
 import akka.pattern._
 import akka.util._
 import annotation.tailrec
 import collection.JavaConverters._
-import collection.SortedMap
 import collection.immutable.IndexedSeq
 import collection.immutable.TreeMap
 import collection.mutable.Buffer
 import com.amazonaws.services.dynamodb.AmazonDynamoDB
 import com.amazonaws.services.dynamodb.model._
 import com.amazonaws.services.dynamodb.model.{Key => DynamoKey}
+import com.yammer.metrics.Metrics
+import com.yammer.metrics.core.Timer
 import java.nio.ByteBuffer
 import java.util.Collections
+import java.util.concurrent.TimeUnit
 import java.util.{List => JList, Map => JMap, HashMap => JHMap}
 import org.eligosource.eventsourced.core.Channel.Deliver
 import org.eligosource.eventsourced.core.Journal._
 import org.eligosource.eventsourced.core.{Serialization, Message}
 import scala.concurrent.duration._
+import org.eligosource.eventsourced.core.Journal.Looped
+import org.eligosource.eventsourced.core.Journal.ReplayOutMsgs
+import org.eligosource.eventsourced.core.Journal.WriteAck
+import org.eligosource.eventsourced.core.Journal.BatchDeliverOutMsgs
+import org.eligosource.eventsourced.core.Journal.Written
+import org.eligosource.eventsourced.core.Journal.DeleteOutMsg
+import org.eligosource.eventsourced.core.Journal.WriteOutMsg
+import org.eligosource.eventsourced.core.Journal.ReplayInMsgs
+import org.eligosource.eventsourced.core.Message
+import org.eligosource.eventsourced.core.Journal.Loop
+import org.eligosource.eventsourced.core.Journal.WriteInMsg
+import org.eligosource.eventsourced.core.Journal.SetCommandListener
+import org.eligosource.eventsourced.core.Journal.BatchReplayInMsgs
+import concurrent.Await
 
 /**
  * Current status:
@@ -49,16 +65,18 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
     new DynamoKey()
       .withHashKeyElement(counterAtt(cntr))
 
-  implicit val dynamo: AmazonDynamoDB = props.dynamo
-
   implicit val ctx = context.system.dispatcher
 
   implicit val timeout = Timeout(200 seconds)
 
+  val reader = context.actorOf(Props(new DynamoDBClient(props)), "reader")
+
 
   protected def storedCounter: Long = {
     val start = Long.MaxValue
-    findStoredCounter(start)
+    val counter = findStoredCounter(start)
+    log.warning(s"found stored counter $counter")
+    counter
   }
 
   @tailrec
@@ -66,9 +84,12 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
     val candidates = candidateKeys(max)
     val ka = new KeysAndAttributes().withKeys(candidates.values.toSeq: _*).withConsistentRead(true)
     val tables = Collections.singletonMap(props.journalTable, ka)
-    val res = dynamo.batchGetItem(new BatchGetItemRequest().withRequestItems(tables))
+    val get = new BatchGetItemRequest().withRequestItems(tables)
+    val future = (reader ? get).mapTo[BatchGetItemResult]
+    val res = Await.result(future, 5 seconds)
     val batch = mapBatch(res.getResponses.get(props.journalTable))
-    val counters: List[Long] = candidates.map {       ///find the counters associated with any found keys
+    val counters: List[Long] = candidates.map {
+      ///find the counters associated with any found keys
       case (cnt, key) => Option(batch.get(key.getHashKeyElement)).map(_ => cnt)
     }.flatten.toList
 
@@ -94,11 +115,12 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
     (Stream.iterate(1L, 100)(i => i + increment)).map {
       i =>
         i -> counterKey(i)
-    }.foldLeft(TreeMap.empty[Long,DynamoKey]){
+    }.foldLeft(TreeMap.empty[Long, DynamoKey]) {
       case (tm, (cnt, key)) => tm + (cnt -> key)
     }
   }
 
+  ///todo all BatchGetItem need to chek and retry for unprocessed keys before mapBatch-ing
   private def replayOut(r: ReplayOutMsgs, replayTo: Long, p: (Message) => Unit) {
     val from = r.fromSequenceNr
     val msgs = (replayTo - r.fromSequenceNr).toInt + 1
@@ -108,7 +130,10 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
       keys =>
         log.debug("replayingOut")
         val ka = new KeysAndAttributes().withKeys(keys.asJava).withConsistentRead(true)
-        val resp = dynamo.batchGetItem(new BatchGetItemRequest().withRequestItems(Collections.singletonMap(props.journalTable, ka)))
+        val get = new BatchGetItemRequest().withRequestItems(Collections.singletonMap(props.journalTable, ka))
+        val future = (reader ? get).mapTo[BatchGetItemResult]
+        val resp = Await.result(future, 5 seconds)
+        log.warning(s"got replayout resp ${resp.toString}")
         val batchMap = mapBatch(resp.getResponses.get(props.journalTable))
 
         keys.foreach {
@@ -131,7 +156,11 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
         log.debug("replayingIn")
         keys.foreach(k => log.debug(k.toString))
         val ka = new KeysAndAttributes().withKeys(keys.asJava).withConsistentRead(true)
-        val resp = dynamo.batchGetItem(new BatchGetItemRequest().withRequestItems(Collections.singletonMap(props.journalTable, ka)))
+        val get = new BatchGetItemRequest().withRequestItems(Collections.singletonMap(props.journalTable, ka))
+        val future = (reader ? get).mapTo[BatchGetItemResult]
+        val resp = Await.result(future, 5 seconds)
+        log.warning(s"got replayin resp ${resp.toString}")
+
         val batchMap = mapBatch(resp.getResponses.get(props.journalTable))
         val messages = keys.map {
           key =>
@@ -155,9 +184,12 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
       }
 
       val ka = new KeysAndAttributes().withKeys(keys.asJava).withConsistentRead(true)
-      val batch = new BatchGetItemRequest().withRequestItems(Collections.singletonMap(props.journalTable, ka))
-      val response = dynamo.batchGetItem(batch).getResponses.get(props.journalTable)
-      val batchMap = mapBatch(response)
+      val get = new BatchGetItemRequest().withRequestItems(Collections.singletonMap(props.journalTable, ka))
+      val future = (reader ? get).mapTo[BatchGetItemResult]
+      val response = Await.result(future, 5 seconds)
+      log.warning(s"gotreplayack resp ${response.toString}")
+
+      val batchMap = mapBatch(response.getResponses.get(props.journalTable))
 
       val acks = keys.map {
         key =>
@@ -182,11 +214,6 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
     map
   }
 
-  def queryAll(q: QueryRequest): (Buffer[Message], Option[DynamoKey]) = {
-    val res: QueryResult = dynamo.query(q)
-    val messages = res.getItems.asScala.map(m => m.get(Data).getB).map(b => msgFromBytes(b.array()))
-    (messages, Option(res.getLastEvaluatedKey))
-  }
 
   def put(key: DynamoKey, message: Array[Byte]): PutRequest = {
     val item = new JHMap[String, AttributeValue]
@@ -203,23 +230,6 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
     new PutRequest().withItem(item)
   }
 
-
-  def batchWrite(puts: PutRequest*) {
-    log.debug("batchWrite")
-    val write = new JHMap[String, JList[WriteRequest]]
-    val writes = puts.map(new WriteRequest().withPutRequest(_)).asJava
-    write.put(props.journalTable, writes)
-    val batch = new BatchWriteItemRequest().withRequestItems(write)
-    val res: BatchWriteItemResult = dynamo.batchWriteItem(batch)
-    res.getUnprocessedItems.asScala.foreach {
-      case (t, u) =>
-        log.error("UNPROCESSED!")
-        u.asScala.foreach {
-          w => log.error(w.toString)
-          dynamo.putItem(new PutItemRequest().withTableName(props.journalTable).withItem(w.getPutRequest.getItem))
-        }
-    }
-  }
 
   def S(value: String): AttributeValue = new AttributeValue().withS(value)
 
@@ -261,24 +271,21 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
   implicit def replayOutToDynamoKey(cmd: ReplayOutMsgs): DynamoKey =
     new DynamoKey().withHashKeyElement(outKey(cmd.channelId, cmd.fromSequenceNr))
 
-  implicit def replayInToQuery(re: ReplayInMsgs): QueryRequest =
-    new QueryRequest()
-      .withTableName(props.journalTable)
-      .withConsistentRead(true)
-      .withHashKeyValue(inKey(re.processorId, re.fromSequenceNr))
-
-  implicit def replayOutToQuery(re: ReplayOutMsgs): QueryRequest =
-    new QueryRequest()
-      .withTableName(props.journalTable)
-      .withConsistentRead(true)
-      .withHashKeyValue(outKey(re.channelId, re.fromSequenceNr))
-
 
   val deadLetters = context.system.deadLetters
-  val resequencer: ActorRef = context.actorOf(Props(new Resequencer))
+  val resequencer: ActorRef = context.actorOf(Props(new Resequencer),"resequencer")
+
+  val listener = context.system.actorOf(Props(new Actor {
+    def receive = {
+      case d: DeadLetter ⇒ log.warning(d.toString())
+    }
+  }))
+
+  context.system.eventStream.subscribe(listener, classOf[DeadLetter])
+
 
   val w: IndexedSeq[ActorRef] = (1 to props.asyncWriterCount).map {
-    i => context.actorOf(Props(new Writer))
+    i => context.actorOf(Props(new Writer(i)), s"writer$i")
   }
 
   val writers: Vector[ActorRef] = Vector(w: _*)
@@ -363,23 +370,36 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
     log.debug("prestart" + _counter)
   }
 
-  class Writer extends Actor {
+  class Writer(idx:Int) extends Actor {
+    val client = context.actorOf(Props(new DynamoDBClient(props)),s"dynamoWriter$idx")
+    val timer = Metrics.newTimer(classOf[Writer], "all-writes", TimeUnit.MILLISECONDS, TimeUnit.SECONDS)
+    val timerIn = Metrics.newTimer(classOf[Writer], "in-writes", TimeUnit.MILLISECONDS, TimeUnit.SECONDS)
+    val timerOut = Metrics.newTimer(classOf[Writer], "out-writes", TimeUnit.MILLISECONDS, TimeUnit.SECONDS)
+    val timerAck = Metrics.newTimer(classOf[Writer], "ack-writes", TimeUnit.MILLISECONDS, TimeUnit.SECONDS)
+
+    def timed[T](timers: Timer*)(block: => T): T = {
+      val ctx = timers.map(_.time())
+      val t = block
+      ctx.foreach(_.stop())
+      t
+    }
+
     def receive = {
       case (nr, cmd: WriteInMsg) => {
-        executeWriteInMsg(cmd)
-        sender !()
+        executeWriteInMsg(cmd)(sender)
+        //sender !()
       }
       case (nr, cmd: WriteOutMsg) => {
-        executeWriteOutMsg(cmd)
-        sender !()
+        executeWriteOutMsg(cmd)(sender)
+        //sender !()
       }
       case (nr, cmd: WriteAck) => {
-        executeWriteAck(cmd)
-        sender !()
+        executeWriteAck(cmd)(sender)
+        // sender !()
       }
       case (nr, cmd: DeleteOutMsg) => {
-        executeDeleteOutMsg(cmd)
-        sender !()
+        executeDeleteOutMsg(cmd)(sender)
+        //sender !()
       }
     }
 
@@ -387,12 +407,14 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
       sender ! Status.Failure(reason)
     }
 
-    def executeDeleteOutMsg(cmd: DeleteOutMsg) {
+    def executeDeleteOutMsg(cmd: DeleteOutMsg)(snd:ActorRef) {
       val del: DeleteItemRequest = new DeleteItemRequest().withTableName(props.journalTable).withKey(cmd)
-      dynamo.deleteItem(del)
+      (client ? del) onSuccess {
+        case _ => snd !()
+      }
     }
 
-    def executeWriteOutMsg(cmd: WriteOutMsg) {
+    def executeWriteOutMsg(cmd: WriteOutMsg)(s: ActorRef) {
       val ack = {
         if (cmd.ackSequenceNr != SkipAck)
           putAck(WriteAck(cmd.ackProcessorId, cmd.channelId, cmd.ackSequenceNr))
@@ -402,24 +424,43 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
       }
 
       log.debug(s"batch out with counter ${cmd.message.sequenceNr}")
-      batchWrite(
-        put(cmd, cmd.message.clearConfirmationSettings),
-        put(counterKey(cmd.message.sequenceNr), countMarker),
-        ack
-      )
+      timed(timer, timerOut) {
+        batchWrite(
+          put(cmd, cmd.message.clearConfirmationSettings),
+          put(counterKey(cmd.message.sequenceNr), countMarker),
+          ack
+        )(s)
+      }
     }
 
-    def executeWriteInMsg(cmd: WriteInMsg) {
+    def executeWriteInMsg(cmd: WriteInMsg)(s: ActorRef) {
       log.debug(s"batch in with counter ${cmd.message.sequenceNr}")
-      batchWrite(
-        put(cmd, cmd.message.clearConfirmationSettings),
-        put(counterKey(cmd.message.sequenceNr), countMarker)
-      )
+      timed(timer, timerIn) {
+        batchWrite(
+          put(cmd, cmd.message.clearConfirmationSettings),
+          put(counterKey(cmd.message.sequenceNr), countMarker)
+        )(s)
+      }
     }
 
-    def executeWriteAck(cmd: WriteAck) {
-      batchWrite(putAck(cmd))
+    def executeWriteAck(cmd: WriteAck)(s: ActorRef) {
+      timed(timer, timerAck) {
+        batchWrite(putAck(cmd))(s)
+      }
     }
+
+    def batchWrite(puts: PutRequest*)(s: ActorRef) {
+      log.debug("batchWrite")
+      val write = new JHMap[String, JList[WriteRequest]]
+      val writes = puts.map(new WriteRequest().withPutRequest(_)).asJava
+      write.put(props.journalTable, writes)
+      val batch = new BatchWriteItemRequest().withRequestItems(write)
+      (client ? batch) onSuccess {
+        case _ => s !()
+      }
+    }
+
+
   }
 
 
@@ -530,6 +571,7 @@ object DynamoDBJournal {
       waitForActiveTable(table, retries - 1)
     }
   }
+
 
 }
 
