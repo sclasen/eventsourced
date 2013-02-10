@@ -4,24 +4,27 @@ import akka.actor.{Props, ActorRef, Actor}
 import akka.util.Timeout
 import collection.JavaConverters._
 import com.amazonaws.auth.{AWS4Signer, BasicAWSCredentials}
-import com.amazonaws.http.{HttpResponse => AWSHttpResponse, JsonResponseHandler, HttpMethodName}
+import com.amazonaws.http.{HttpResponse => AWSHttpResponse, JsonErrorResponseHandler, JsonResponseHandler, HttpMethodName}
 import com.amazonaws.services.dynamodb.model._
 import com.amazonaws.services.dynamodb.model.transform._
-import com.amazonaws.transform.{JsonUnmarshallerContext, Unmarshaller, Marshaller}
+import com.amazonaws.transform.{JsonErrorUnmarshaller, JsonUnmarshallerContext, Unmarshaller, Marshaller}
 import com.amazonaws.util.StringInputStream
-import com.amazonaws.{AmazonWebServiceResponse, Request}
+import com.amazonaws.{AmazonServiceException, AmazonWebServiceResponse, Request}
 import concurrent.Future
 import java.net.URI
 import org.codehaus.jackson.JsonFactory
 import scala.concurrent.duration._
-import spray.can.client.{HttpDialog, DefaultHttpClient}
+import spray.can.client.DefaultHttpClient
+import spray.client.HttpConduit
 import spray.http.HttpHeaders._
 import spray.http.HttpMethods._
 import spray.http.HttpProtocols._
 import spray.http.MediaTypes.CustomMediaType
 import spray.http._
 import spray.util._
-import spray.client.HttpConduit
+import com.amazonaws.util.json.JSONObject
+import java.util.{List => JList, Map => JMap, HashMap => JHMap}
+
 
 class DynamoDBClient(props: DynamoDBJournalProps) extends Actor {
 
@@ -35,8 +38,8 @@ class DynamoDBClient(props: DynamoDBJournalProps) extends Actor {
   val connection = DefaultHttpClient(context.system)
   //def dialog = HttpDialog(connection, "dynamodb.us-east-1.amazonaws.com")//, 443, SslEnabled)
   val conduit = context.actorOf(
-      props = Props(new HttpConduit(connection, "dynamodb.us-east-1.amazonaws.com"))
-    )
+    props = Props(new HttpConduit(connection, "dynamodb.us-east-1.amazonaws.com"))
+  )
 
   val pipeline = HttpConduit.sendReceive(conduit)
 
@@ -52,6 +55,15 @@ class DynamoDBClient(props: DynamoDBJournalProps) extends Actor {
   implicit val batchGetM = new BatchGetItemRequestMarshaller()
   implicit val batchGetU = BatchGetItemResultJsonUnmarshaller.getInstance()
   val jsonFactory = new JsonFactory()
+
+  val exceptionUnmarshallers:JList[JsonErrorUnmarshaller] = List(
+    new LimitExceededExceptionUnmarshaller(),
+    new InternalServerErrorExceptionUnmarshaller(),
+    new ProvisionedThroughputExceededExceptionUnmarshaller(),
+    new ResourceInUseExceptionUnmarshaller(),
+    new ConditionalCheckFailedExceptionUnmarshaller(),
+    new ResourceNotFoundExceptionUnmarshaller(),
+    new JsonErrorUnmarshaller()).toBuffer.asJava
 
 
   val `application/x-amz-json-1.0` = CustomMediaType("application/x-amz-json-1.0")
@@ -96,7 +108,7 @@ class DynamoDBClient(props: DynamoDBJournalProps) extends Actor {
         }
         puts.onFailure {
           case e: Exception =>
-            log.error("sendUnprocessed!!!" +  e.toString) //todo propagate failures
+            log.error("sendUnprocessed!!!" + e.toString) //todo propagate failures
             snd ! e
 
         }
@@ -112,7 +124,7 @@ class DynamoDBClient(props: DynamoDBJournalProps) extends Actor {
     }
     req.onFailure {
       case e: Exception =>
-        log.error("sendBatchGet!!!" +  e.toString) //todo propagate failures
+        log.error("sendBatchGet!!!" + e.toString) //todo propagate failures
         snd ! e
 
     }
@@ -125,7 +137,7 @@ class DynamoDBClient(props: DynamoDBJournalProps) extends Actor {
     }
     req.onFailure {
       case e: Exception =>
-        log.error("sendDeltet!!!" +  e.toString) //todo propagate failures
+        log.error("sendDeltet!!!" + e.toString) //todo propagate failures
         snd ! e
 
     }
@@ -142,17 +154,20 @@ class DynamoDBClient(props: DynamoDBJournalProps) extends Actor {
     request
   }
 
-  def response[T](response: HttpResponse)(implicit unmarshaller: Unmarshaller[T, JsonUnmarshallerContext]): T = try {
+  def response[T](response: HttpResponse)(implicit unmarshaller: Unmarshaller[T, JsonUnmarshallerContext]): T = {
     val awsResp = new AWSHttpResponse(null, null)
     awsResp.setContent(new StringInputStream(response.entity.asString))
     awsResp.setStatusCode(response.status.value)
     awsResp.setStatusText(response.status.defaultMessage)
-    val handler = new JsonResponseHandler[T](unmarshaller)
-    val handle: AmazonWebServiceResponse[T] = handler.handle(awsResp)   ///todo how do 4xx work
-    val resp = handle.getResult
-    resp
-  } catch {
-    case e: Exception => log.error(e, e.getStackTraceString); throw e
+    if (awsResp.getStatusCode == 200) {
+      val handler = new JsonResponseHandler[T](unmarshaller)
+      val handle: AmazonWebServiceResponse[T] = handler.handle(awsResp) ///todo how do 4xx work
+      val resp = handle.getResult
+      resp
+    } else {
+      val errorResponseHandler = new JsonErrorResponseHandler(exceptionUnmarshallers.asInstanceOf[JList[Unmarshaller[AmazonServiceException,JSONObject]]]);
+      throw errorResponseHandler.handle(awsResp)
+    }
   }
 
   def headers(req: Request[_]): List[HttpHeader] = {
