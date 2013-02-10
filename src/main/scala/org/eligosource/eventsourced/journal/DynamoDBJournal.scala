@@ -75,7 +75,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
   protected def storedCounter: Long = {
     val start = Long.MaxValue
     val counter = findStoredCounter(start)
-    log.warning(s"found stored counter $counter")
+    log.debug(s"found stored counter $counter")
     counter
   }
 
@@ -133,7 +133,6 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
         val get = new BatchGetItemRequest().withRequestItems(Collections.singletonMap(props.journalTable, ka))
         val future = (reader ? get).mapTo[BatchGetItemResult]
         val resp = Await.result(future, 5 seconds)
-        log.warning(s"got replayout resp ${resp.toString}")
         val batchMap = mapBatch(resp.getResponses.get(props.journalTable))
 
         keys.foreach {
@@ -159,8 +158,6 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
         val get = new BatchGetItemRequest().withRequestItems(Collections.singletonMap(props.journalTable, ka))
         val future = (reader ? get).mapTo[BatchGetItemResult]
         val resp = Await.result(future, 5 seconds)
-        log.warning(s"got replayin resp ${resp.toString}")
-
         val batchMap = mapBatch(resp.getResponses.get(props.journalTable))
         val messages = keys.map {
           key =>
@@ -187,8 +184,6 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
       val get = new BatchGetItemRequest().withRequestItems(Collections.singletonMap(props.journalTable, ka))
       val future = (reader ? get).mapTo[BatchGetItemResult]
       val response = Await.result(future, 5 seconds)
-      log.warning(s"gotreplayack resp ${response.toString}")
-
       val batchMap = mapBatch(response.getResponses.get(props.journalTable))
 
       val acks = keys.map {
@@ -277,7 +272,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
 
   val listener = context.system.actorOf(Props(new Actor {
     def receive = {
-      case d: DeadLetter ⇒ log.warning(d.toString())
+      case d: DeadLetter ⇒ log.debug(d.toString())
     }
   }))
 

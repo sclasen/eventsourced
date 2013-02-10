@@ -68,7 +68,9 @@ class DynamoDBClient(props: DynamoDBJournalProps) extends Actor {
         else sendUnprocessedItems(result, snd)
     }
     req.onFailure {
-      case e: Exception => log.error(e.getStackTraceString)
+      case e: Exception =>
+        log.error("sendBatchWrite!!!" + e.toString)
+        snd ! e
     }
   }
 
@@ -87,7 +89,10 @@ class DynamoDBClient(props: DynamoDBJournalProps) extends Actor {
           case results => snd !()
         }
         puts.onFailure {
-          case e: Exception => log.error(e.getStackTraceString) //todo propagate failures
+          case e: Exception =>
+            log.error("sendUnprocessed!!!" +  e.toString) //todo propagate failures
+            snd ! e
+
         }
     }
   }
@@ -100,7 +105,10 @@ class DynamoDBClient(props: DynamoDBJournalProps) extends Actor {
         snd ! result
     }
     req.onFailure {
-      case e: Exception => log.error(e.getStackTraceString) //todo propagate failures
+      case e: Exception =>
+        log.error("sendBatchGet!!!" +  e.toString) //todo propagate failures
+        snd ! e
+
     }
   }
 
@@ -110,7 +118,10 @@ class DynamoDBClient(props: DynamoDBJournalProps) extends Actor {
       case result => snd !()
     }
     req.onFailure {
-      case e: Exception => log.error(e.getStackTraceString) //todo propagate failures
+      case e: Exception =>
+        log.error("sendDeltet!!!" +  e.toString) //todo propagate failures
+        snd ! e
+
     }
   }
 
@@ -133,7 +144,6 @@ class DynamoDBClient(props: DynamoDBJournalProps) extends Actor {
     val handler = new JsonResponseHandler[T](unmarshaller)
     val handle: AmazonWebServiceResponse[T] = handler.handle(awsResp)   ///todo how do 4xx work
     val resp = handle.getResult
-    log.info(resp.toString)
     resp
   } catch {
     case e: Exception => log.error(e, e.getStackTraceString); throw e
