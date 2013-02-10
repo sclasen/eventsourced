@@ -30,9 +30,9 @@ package object core {
    */
   def actor(actor: => Actor, name: Option[String] = None, dispatcherName: Option[String] = None)(implicit actorRefFactory: ActorRefFactory): ActorRef = {
     var props = Props(actor)
-    import akka.testkit.CallingThreadDispatcher
+
     dispatcherName.foreach { name =>
-      props = props.withDispatcher(CallingThreadDispatcher.Id)
+      props = props.withDispatcher(name)
     }
 
     if (name.isDefined)
