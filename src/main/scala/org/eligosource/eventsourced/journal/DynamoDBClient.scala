@@ -1,6 +1,6 @@
 package org.eligosource.eventsourced.journal
 
-import akka.actor.{ActorRef, Actor}
+import akka.actor.{Props, ActorRef, Actor}
 import akka.util.Timeout
 import collection.JavaConverters._
 import com.amazonaws.auth.{AWS4Signer, BasicAWSCredentials}
@@ -21,6 +21,7 @@ import spray.http.HttpProtocols._
 import spray.http.MediaTypes.CustomMediaType
 import spray.http._
 import spray.util._
+import spray.client.HttpConduit
 
 class DynamoDBClient(props: DynamoDBJournalProps) extends Actor {
 
@@ -32,7 +33,12 @@ class DynamoDBClient(props: DynamoDBJournalProps) extends Actor {
   val endpointUri = new URI(s"http://$endpoint")
 
   val connection = DefaultHttpClient(context.system)
-  def dialog = HttpDialog(connection, "dynamodb.us-east-1.amazonaws.com")//, 443, SslEnabled)
+  //def dialog = HttpDialog(connection, "dynamodb.us-east-1.amazonaws.com")//, 443, SslEnabled)
+  val conduit = context.actorOf(
+      props = Props(new HttpConduit(connection, "dynamodb.us-east-1.amazonaws.com", 443, true))
+    )
+
+  val pipeline = HttpConduit.sendReceive(conduit)
 
   val credentials = new BasicAWSCredentials(props.key, props.secret)
   val signer = new AWS4Signer()
@@ -61,7 +67,7 @@ class DynamoDBClient(props: DynamoDBJournalProps) extends Actor {
 
 
   def sendBatchWrite(awsWrite: BatchWriteItemRequest, snd: ActorRef) {
-    val req = dialog.send(request(awsWrite)).end.map(response[BatchWriteItemResult])
+    val req = pipeline(request(awsWrite)).map(response[BatchWriteItemResult])
     req.onSuccess {
       case result =>
         if (result.getUnprocessedItems.size() == 0) snd !()
@@ -82,7 +88,7 @@ class DynamoDBClient(props: DynamoDBJournalProps) extends Actor {
           u.asScala.map {
             w =>
               val p = new PutItemRequest().withTableName(props.journalTable).withItem(w.getPutRequest.getItem)
-              dialog.send(request(p)).end.map(response[PutItemResult])
+              pipeline(request(p)).map(response[PutItemResult])
           }
         }
         puts.onSuccess {
@@ -99,7 +105,7 @@ class DynamoDBClient(props: DynamoDBJournalProps) extends Actor {
 
   ///todo all BatchGetItem need to chek and retry for unprocessed keys before mapBatch-ing
   def sendBatchGet(awsGet: BatchGetItemRequest, snd: ActorRef) {
-    val req = dialog.send(request(awsGet)).end.map(response[BatchGetItemResult])
+    val req = pipeline(request(awsGet)).map(response[BatchGetItemResult])
     req.onSuccess {
       case result =>
         snd ! result
@@ -113,7 +119,7 @@ class DynamoDBClient(props: DynamoDBJournalProps) extends Actor {
   }
 
   def sendDelete(awsDel: DeleteItemRequest, snd: ActorRef) {
-    val req = dialog.send(request(awsDel)).end.map(response[DeleteItemResult])
+    val req = pipeline(request(awsDel)).map(response[DeleteItemResult])
     req.onSuccess {
       case result => snd !()
     }
