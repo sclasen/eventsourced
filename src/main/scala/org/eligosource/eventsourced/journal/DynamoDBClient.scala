@@ -30,12 +30,12 @@ class DynamoDBClient(props: DynamoDBJournalProps) extends Actor {
   val log = context.system.log
 
   val endpoint = "dynamodb.us-east-1.amazonaws.com"
-  val endpointUri = new URI(s"http://$endpoint")
+  val endpointUri = new URI(s"https://$endpoint")
 
   val connection = DefaultHttpClient(context.system)
   //def dialog = HttpDialog(connection, "dynamodb.us-east-1.amazonaws.com")//, 443, SslEnabled)
   val conduit = context.actorOf(
-      props = Props(new HttpConduit(connection, "dynamodb.us-east-1.amazonaws.com", 443, true))
+      props = Props(new HttpConduit(connection, "dynamodb.us-east-1.amazonaws.com"))
     )
 
   val pipeline = HttpConduit.sendReceive(conduit)
