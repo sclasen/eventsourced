@@ -355,7 +355,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
   }
 
   class Writer(idx:Int) extends Actor {
-
+    val dynamoWriter = new DynamoDBClient(props, context)
     val timer = Metrics.newTimer(classOf[Writer], "all-writes", TimeUnit.MILLISECONDS, TimeUnit.SECONDS)
     val timerIn = Metrics.newTimer(classOf[Writer], "in-writes", TimeUnit.MILLISECONDS, TimeUnit.SECONDS)
     val timerOut = Metrics.newTimer(classOf[Writer], "out-writes", TimeUnit.MILLISECONDS, TimeUnit.SECONDS)
@@ -393,7 +393,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
 
     def executeDeleteOutMsg(cmd: DeleteOutMsg)(snd:ActorRef) {
       val del: DeleteItemRequest = new DeleteItemRequest().withTableName(props.journalTable).withKey(cmd)
-      val delete = dynamo.sendDelete(del)
+      val delete = dynamoWriter.sendDelete(del)
       delete.onSuccess {
         case _ => snd !()
       }
@@ -443,7 +443,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
       val writes = puts.map(new WriteRequest().withPutRequest(_)).asJava
       write.put(props.journalTable, writes)
       val batch = new BatchWriteItemRequest().withRequestItems(write)
-      val req = dynamo.sendBatchWrite(batch)
+      val req = dynamoWriter.sendBatchWrite(batch)
       req.onSuccess {
         case _ => s !()
       }
