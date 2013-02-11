@@ -1,7 +1,6 @@
 package org.eligosource.eventsourced.journal
 
 import akka.actor.{ActorContext, Props}
-import akka.util.Timeout
 import collection.JavaConverters._
 import com.amazonaws.auth.{AWS4Signer, BasicAWSCredentials}
 import com.amazonaws.http.{HttpResponse => AWSHttpResponse, JsonErrorResponseHandler, JsonResponseHandler, HttpMethodName}
@@ -13,7 +12,7 @@ import com.amazonaws.util.json.JSONObject
 import com.amazonaws.{DefaultRequest, AmazonServiceException, AmazonWebServiceResponse, Request}
 import concurrent.Future
 import java.net.URI
-import java.util.{List => JList, Map => JMap, HashMap => JHMap}
+import java.util.{List => JList}
 import org.codehaus.jackson.JsonFactory
 import spray.can.client.DefaultHttpClient
 import spray.client.HttpConduit
@@ -50,7 +49,7 @@ class DynamoDBClient(props: DynamoDBJournalProps, context: ActorContext) {
   val signer = new AWS4Signer()
   signer.setServiceName(serviceName)
 
-  implicit val batchWriteM: Marshaller[Request[BatchWriteItemRequest], BatchWriteItemRequest] = new BatchWriteItemRequestMarshaller()
+  implicit val batchWriteM = new BatchWriteItemRequestMarshaller()
   implicit val batchWriteU = BatchWriteItemResultJsonUnmarshaller.getInstance()
   implicit val putItemM = new PutItemRequestMarshaller()
   implicit val putItemU = PutItemResultJsonUnmarshaller.getInstance()
