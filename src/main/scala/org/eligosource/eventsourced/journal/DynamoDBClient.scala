@@ -1,6 +1,6 @@
 package org.eligosource.eventsourced.journal
 
-import akka.actor.{Props, ActorRef, Actor}
+import akka.actor.{ActorContext, Props}
 import akka.util.Timeout
 import collection.JavaConverters._
 import com.amazonaws.auth.{AWS4Signer, BasicAWSCredentials}
@@ -15,7 +15,6 @@ import concurrent.Future
 import java.net.URI
 import java.util.{List => JList, Map => JMap, HashMap => JHMap}
 import org.codehaus.jackson.JsonFactory
-import scala.concurrent.duration._
 import spray.can.client.DefaultHttpClient
 import spray.client.HttpConduit
 import spray.http.HttpHeaders._
@@ -23,12 +22,17 @@ import spray.http.HttpMethods._
 import spray.http.HttpProtocols._
 import spray.http.MediaTypes.CustomMediaType
 import spray.http._
-import spray.util._
 
 
-class DynamoDBClient(props: DynamoDBJournalProps) extends Actor {
 
-  implicit val timeout = Timeout(10 seconds)
+
+
+class DynamoDBClient(props: DynamoDBJournalProps, context: ActorContext) {
+
+
+
+  implicit val timeout = props.operationtTmeout
+  implicit val excn = context.system.dispatcher
 
   val log = context.system.log
   val serviceName = "dynamodb"
@@ -69,78 +73,29 @@ class DynamoDBClient(props: DynamoDBJournalProps) extends Actor {
   val `application/x-amz-json-1.0` = CustomMediaType("application/x-amz-json-1.0")
 
 
-  def receive = {
-    case awsWrite: BatchWriteItemRequest => sendBatchWrite(awsWrite, sender)
-    case awsGet: BatchGetItemRequest =>
-      val s = sender
-      sendBatchGet(awsGet, s)
-    case awsDel: DeleteItemRequest => sendDelete(awsDel, sender)
-  }
-
-
-  def sendBatchWrite(awsWrite: BatchWriteItemRequest, snd: ActorRef) {
-    val req = pipeline(request(awsWrite)).map(response[BatchWriteItemResult])
-    req.onSuccess {
-      case result =>
-        if (result.getUnprocessedItems.size() == 0) snd !()
-        else sendUnprocessedItems(result, snd)
-    }
-    req.onFailure {
-      case e: Exception =>
-        log.error("sendBatchWrite!!!" + e.toString)
-        snd ! e
+  def sendBatchWrite(awsWrite: BatchWriteItemRequest): Future[(BatchWriteItemResult, List[PutItemResult])] = {
+    pipeline(request(awsWrite)).map(response[BatchWriteItemResult]).flatMap {
+      result => sendUnprocessedItems(result)
     }
   }
 
-  def sendUnprocessedItems(result: BatchWriteItemResult, snd: ActorRef) {
-    result.getUnprocessedItems.asScala.foreach {
-      case (t, u) =>
-        log.error("UNPROCESSED!")
-        val puts = Future.sequence {
-          u.asScala.map {
-            w =>
-              val p = new PutItemRequest().withTableName(props.journalTable).withItem(w.getPutRequest.getItem)
-              pipeline(request(p)).map(response[PutItemResult])
-          }
-        }
-        puts.onSuccess {
-          case results => snd !()
-        }
-        puts.onFailure {
-          case e: Exception =>
-            log.error("sendUnprocessed!!!" + e.toString) //todo propagate failures
-            snd ! e
-
-        }
-    }
+  def sendUnprocessedItems(result: BatchWriteItemResult): Future[(BatchWriteItemResult, List[PutItemResult])] = {
+    Future.sequence {
+      result.getUnprocessedItems.get(props.journalTable).asScala.map {
+        w =>
+          val p = new PutItemRequest().withTableName(props.journalTable).withItem(w.getPutRequest.getItem)
+          pipeline(request(p)).map(response[PutItemResult])
+      }
+    }.map(puts => result -> puts.toList)
   }
 
   ///todo all BatchGetItem need to chek and retry for unprocessed keys before mapBatch-ing
-  def sendBatchGet(awsGet: BatchGetItemRequest, snd: ActorRef) {
-    val req = pipeline(request(awsGet)).map(response[BatchGetItemResult])
-    req.onSuccess {
-      case result =>
-        snd ! result
-    }
-    req.onFailure {
-      case e: Exception =>
-        log.error("sendBatchGet!!!" + e.toString) //todo propagate failures
-        snd ! e
-
-    }
+  def sendBatchGet(awsGet: BatchGetItemRequest): Future[BatchGetItemResult] = {
+    pipeline(request(awsGet)).map(response[BatchGetItemResult])
   }
 
-  def sendDelete(awsDel: DeleteItemRequest, snd: ActorRef) {
-    val req = pipeline(request(awsDel)).map(response[DeleteItemResult])
-    req.onSuccess {
-      case result => snd !()
-    }
-    req.onFailure {
-      case e: Exception =>
-        log.error("sendDeltet!!!" + e.toString) //todo propagate failures
-        snd ! e
-
-    }
+  def sendDelete(awsDel: DeleteItemRequest):Future[DeleteItemResult]= {
+    pipeline(request(awsDel)).map(response[DeleteItemResult])
   }
 
   def request[T](t: T)(implicit marshaller: Marshaller[Request[T], T]): HttpRequest = {

@@ -34,7 +34,7 @@ class StressExample  extends EventsourcingSpec[Fixture] {
 
   "An event-sourced application" when {
     "using default channels" should {
-      "be able to deal with reasonable load" ignore  { fixture =>
+      "be able to deal with reasonable load" in  { fixture =>
         import fixture._
         val processor = configure(reliable = false)
         println("recovering default")
@@ -60,7 +60,7 @@ class StressExample  extends EventsourcingSpec[Fixture] {
 }
 
 object StressExample {
-  val cycles = 1000
+  val cycles = 3000
 
 
   class Fixture  extends EventsourcingFixture[Any] {
@@ -80,7 +80,7 @@ object StressExample {
     Await.ready(Future.sequence(1 to 100 map {i =>processor ? Message(i)}),20 seconds)
     val start = System.nanoTime()
     1 to cycles foreach { i =>
-      Thread.sleep(throttle)
+      //Thread.sleep(throttle)
       val nanos = System.nanoTime()
       processor ? Message(i) onSuccess {
         case r: Int => if (r % 100 == 0) {
