@@ -9,9 +9,11 @@ import com.amazonaws.services.dynamodb.model._
 import com.amazonaws.services.dynamodb.model.transform._
 import com.amazonaws.transform.{JsonErrorUnmarshaller, JsonUnmarshallerContext, Unmarshaller, Marshaller}
 import com.amazonaws.util.StringInputStream
-import com.amazonaws.{AmazonServiceException, AmazonWebServiceResponse, Request}
+import com.amazonaws.util.json.JSONObject
+import com.amazonaws.{DefaultRequest, AmazonServiceException, AmazonWebServiceResponse, Request}
 import concurrent.Future
 import java.net.URI
+import java.util.{List => JList, Map => JMap, HashMap => JHMap}
 import org.codehaus.jackson.JsonFactory
 import scala.concurrent.duration._
 import spray.can.client.DefaultHttpClient
@@ -22,8 +24,6 @@ import spray.http.HttpProtocols._
 import spray.http.MediaTypes.CustomMediaType
 import spray.http._
 import spray.util._
-import com.amazonaws.util.json.JSONObject
-import java.util.{List => JList, Map => JMap, HashMap => JHMap}
 
 
 class DynamoDBClient(props: DynamoDBJournalProps) extends Actor {
@@ -31,20 +31,20 @@ class DynamoDBClient(props: DynamoDBJournalProps) extends Actor {
   implicit val timeout = Timeout(10 seconds)
 
   val log = context.system.log
-
+  val serviceName = "dynamodb"
   val endpoint = "dynamodb.us-east-1.amazonaws.com"
   val endpointUri = new URI(s"https://$endpoint")
 
   val connection = DefaultHttpClient(context.system)
-  //def dialog = HttpDialog(connection, "dynamodb.us-east-1.amazonaws.com")//, 443, SslEnabled)
   val conduit = context.actorOf(
-    props = Props(new HttpConduit(connection, "dynamodb.us-east-1.amazonaws.com"))
+    props = Props(new HttpConduit(connection, endpoint))
   )
 
   val pipeline = HttpConduit.sendReceive(conduit)
 
   val credentials = new BasicAWSCredentials(props.key, props.secret)
   val signer = new AWS4Signer()
+  signer.setServiceName(serviceName)
 
   implicit val batchWriteM: Marshaller[Request[BatchWriteItemRequest], BatchWriteItemRequest] = new BatchWriteItemRequestMarshaller()
   implicit val batchWriteU = BatchWriteItemResultJsonUnmarshaller.getInstance()
@@ -56,7 +56,7 @@ class DynamoDBClient(props: DynamoDBJournalProps) extends Actor {
   implicit val batchGetU = BatchGetItemResultJsonUnmarshaller.getInstance()
   val jsonFactory = new JsonFactory()
 
-  val exceptionUnmarshallers:JList[JsonErrorUnmarshaller] = List(
+  val exceptionUnmarshallers: JList[JsonErrorUnmarshaller] = List(
     new LimitExceededExceptionUnmarshaller(),
     new InternalServerErrorExceptionUnmarshaller(),
     new ProvisionedThroughputExceededExceptionUnmarshaller(),
@@ -155,7 +155,8 @@ class DynamoDBClient(props: DynamoDBJournalProps) extends Actor {
   }
 
   def response[T](response: HttpResponse)(implicit unmarshaller: Unmarshaller[T, JsonUnmarshallerContext]): T = {
-    val awsResp = new AWSHttpResponse(null, null)
+    val req = new DefaultRequest[T](serviceName)
+    val awsResp = new AWSHttpResponse(req, null)
     awsResp.setContent(new StringInputStream(response.entity.asString))
     awsResp.setStatusCode(response.status.value)
     awsResp.setStatusText(response.status.defaultMessage)
@@ -165,7 +166,10 @@ class DynamoDBClient(props: DynamoDBJournalProps) extends Actor {
       val resp = handle.getResult
       resp
     } else {
-      val errorResponseHandler = new JsonErrorResponseHandler(exceptionUnmarshallers.asInstanceOf[JList[Unmarshaller[AmazonServiceException,JSONObject]]]);
+      response.headers.foreach {
+        h => awsResp.addHeader(h.name, h.value)
+      }
+      val errorResponseHandler = new JsonErrorResponseHandler(exceptionUnmarshallers.asInstanceOf[JList[Unmarshaller[AmazonServiceException, JSONObject]]])
       throw errorResponseHandler.handle(awsResp)
     }
   }
