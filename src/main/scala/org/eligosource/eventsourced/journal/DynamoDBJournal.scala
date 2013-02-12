@@ -21,6 +21,7 @@ import org.eligosource.eventsourced.core.Journal._
 import org.eligosource.eventsourced.core.Message
 import org.eligosource.eventsourced.core.Serialization
 import util.{Failure,Success}
+import com.sclasen.spray.dynamodb.DynamoDBClient
 
 /**
  * Current status:
@@ -54,7 +55,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
 
   implicit val timeout = props.operationtTmeout
 
-  val dynamo = new DynamoDBClient(props, context)
+  val dynamo = new DynamoDBClient(props.clientProps)
 
   protected def storedCounter: Long = {
     val start = Long.MaxValue
@@ -68,7 +69,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
     val ka = new KeysAndAttributes().withKeys(candidates.values.toSeq: _*).withConsistentRead(true)
     val tables = Collections.singletonMap(props.journalTable, ka)
     val get = new BatchGetItemRequest().withRequestItems(tables)
-    dynamo.sendBatchGet(get).flatMap {
+    dynamo.sendBatchGetItem(get).flatMap {
       res =>
         val batch = mapBatch(res.getResponses.get(props.journalTable))
         val counters: List[Long] = candidates.map {
@@ -112,7 +113,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
         log.debug("replayingOut")
         val ka = new KeysAndAttributes().withKeys(keys.asJava).withConsistentRead(true)
         val get = new BatchGetItemRequest().withRequestItems(Collections.singletonMap(props.journalTable, ka))
-        val resp = Await.result(dynamo.sendBatchGet(get), props.operationtTmeout.duration)
+        val resp = Await.result(dynamo.sendBatchGetItem(get), props.operationtTmeout.duration)
         val batchMap = mapBatch(resp.getResponses.get(props.journalTable))
         keys.foreach {
           key =>
@@ -135,7 +136,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
         keys.foreach(k => log.debug(k.toString))
         val ka = new KeysAndAttributes().withKeys(keys.asJava).withConsistentRead(true)
         val get = new BatchGetItemRequest().withRequestItems(Collections.singletonMap(props.journalTable, ka))
-        val resp = Await.result(dynamo.sendBatchGet(get), props.operationtTmeout.duration)
+        val resp = Await.result(dynamo.sendBatchGetItem(get), props.operationtTmeout.duration)
         val batchMap = mapBatch(resp.getResponses.get(props.journalTable))
         val messages = keys.map {
           key =>
@@ -160,7 +161,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
 
       val ka = new KeysAndAttributes().withKeys(keys.asJava).withConsistentRead(true)
       val get = new BatchGetItemRequest().withRequestItems(Collections.singletonMap(props.journalTable, ka))
-      val response = Await.result(dynamo.sendBatchGet(get), props.operationtTmeout.duration)
+      val response = Await.result(dynamo.sendBatchGetItem(get), props.operationtTmeout.duration)
       val batchMap = mapBatch(response.getResponses.get(props.journalTable))
       val acks = keys.map {
         key =>
@@ -342,7 +343,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
   }
 
   class Writer(idx: Int) extends Actor {
-    val dynamoWriter = new DynamoDBClient(props, context)
+    val dynamoWriter = new DynamoDBClient(props.clientProps)
     val timer = Metrics.newTimer(classOf[Writer], "all-writes", TimeUnit.MILLISECONDS, TimeUnit.SECONDS)
     val timerIn = Metrics.newTimer(classOf[Writer], "in-writes", TimeUnit.MILLISECONDS, TimeUnit.SECONDS)
     val timerOut = Metrics.newTimer(classOf[Writer], "out-writes", TimeUnit.MILLISECONDS, TimeUnit.SECONDS)
@@ -385,7 +386,7 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
 
     def executeDeleteOutMsg(cmd: DeleteOutMsg): Future[Unit] = {
       val del: DeleteItemRequest = new DeleteItemRequest().withTableName(props.journalTable).withKey(cmd)
-      dynamoWriter.sendDelete(del).map(_ => ())
+      dynamoWriter.sendDeleteItem(del).map(_ => ())
     }
 
     def executeWriteOutMsg(cmd: WriteOutMsg): Future[Unit] = {
@@ -429,8 +430,19 @@ class DynamoDBJournal(props: DynamoDBJournalProps) extends Actor {
       val writes = puts.map(new WriteRequest().withPutRequest(_)).asJava
       write.put(props.journalTable, writes)
       val batch = new BatchWriteItemRequest().withRequestItems(write)
-      dynamoWriter.sendBatchWrite(batch).map(_ => ())
+      dynamoWriter.sendBatchWriteItem(batch).map(sendUnprocessedItems).map(_ => ())
     }
+
+    def sendUnprocessedItems(result: BatchWriteItemResult): Future[(BatchWriteItemResult, List[PutItemResult])] = {
+      Future.sequence {
+        result.getUnprocessedItems.get(props.journalTable).asScala.map {
+          w =>
+            val p = new PutItemRequest().withTableName(props.journalTable).withItem(w.getPutRequest.getItem)
+            dynamoWriter.sendPutItem(p)
+        }
+      }.map(puts => result -> puts.toList)
+    }
+
 
 
   }

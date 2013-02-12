@@ -14,8 +14,7 @@ class DynamoDBJournalSpec extends JournalSpec {
     val secret = sys.env("AWS_SECRET_ACCESS_KEY")
     val table = "eventsourced.dynamodbjournal2.tests"
     val app = System.currentTimeMillis().toString
-    val props: DynamoDBJournalProps = DynamoDBJournalProps(table, app, key, secret, asyncWriterCount = 16)
-    DynamoDBJournal.createJournal(table)(props.dynamo)
+    val props: DynamoDBJournalProps = DynamoDBJournalProps(table, app, key, secret, asyncWriterCount = 16, system = system)
     Journal(props)
   }
 }

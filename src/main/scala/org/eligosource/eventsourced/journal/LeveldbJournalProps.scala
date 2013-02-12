@@ -157,65 +157,10 @@ case class LeveldbJournalProps(
     val secret = sys.env("AWS_SECRET_ACCESS_KEY")
     val table = "eventsourced.dynamodbjournal2.tests"
     val app = "test.app." + System.currentTimeMillis()
-    val props: DynamoDBJournalProps = DynamoDBJournalProps(table, app, key, secret,asyncWriterCount = sys.env.get("CONCURRENCY").map(_.toInt).getOrElse(16))
+    val props: DynamoDBJournalProps = DynamoDBJournalProps(table, app, key, secret,asyncWriterCount = sys.env.get("CONCURRENCY").map(_.toInt).getOrElse(16), system = ActorSystem("test"))
     //DynamoDBJournal.createJournal(table)(props.dynamo)
     new DynamoDBJournal(props)
   }
 
-  def dynamo: AmazonDynamoDB = {
-    val key = sys.env("AWS_ACCESS_KEY_ID")
-    val secret = sys.env("AWS_SECRET_ACCESS_KEY")
-    val table = "eventsourced.dynamojournal.tests"
-    val app = "test.app." + sys.env("TEST_APP")
-    val props: DynamoDBJournalProps = DynamoDBJournalProps(table, app, key, secret)
-    props.dynamo
-  }
-
-  def parallel {
-    val d = dynamo
-    val byts = new Array[Byte](1000)
-    val start = System.currentTimeMillis()
-    implicit val system = ActorSystem("test").dispatcher
-    (start to (start + 100000)).grouped(sys.env.get("CONCURRENCY").map(_.toInt).getOrElse(64)).foreach {
-      group =>
-        Await.result(Future.sequence {
-          group.map {
-            i => Future {
-              val item = new java.util.HashMap[String, AttributeValue]
-              item.put("id", new AttributeValue().withS(i.toString))
-              item.put("sequence", new AttributeValue().withN(i.toString))
-              item.put("event", new AttributeValue().withB(ByteBuffer.wrap(byts)))
-              val put: PutItemRequest = new PutItemRequest().withTableName("eventsourced.dynamojournal.tests").withItem(item)
-              d.putItem(put)
-              println(s"put$i")
-              if (i % 1000 == 0) {
-                val elapsed = System.currentTimeMillis() - start
-                println(s"$i $elapsed")
-              }
-            }
-          }
-        }, 10 seconds)
-    }
-  }
-
-  def single {
-    val d = dynamo
-    val byts = new Array[Byte](1000)
-    val start = System.currentTimeMillis()
-    (start to (start + 100000)).foreach {
-      i =>
-        val item = new java.util.HashMap[String, AttributeValue]
-        item.put("id", new AttributeValue().withS(i.toString))
-        item.put("sequence", new AttributeValue().withN(i.toString))
-        item.put("event", new AttributeValue().withB(ByteBuffer.wrap(byts)))
-        val put: PutItemRequest = new PutItemRequest().withTableName("eventsourced.dynamojournal2.tests").withItem(item)
-        d.putItem(put)
-        println(s"put$i")
-        if (i % 1000 == 0) {
-          val elapsed = System.currentTimeMillis() - start
-          println(s"$i $elapsed")
-        }
-    }
-  }
 }
 
